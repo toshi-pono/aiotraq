@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "aiotraq-monorepo"
+version = "0.1.0"
+description = "Async ready traQ Developper toolkit"
+authors = ["toshi00"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/toshi-pono/aiotraq"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.api.dependencies]
+openapi-python-client = "^0.19.1"
+
+
+[tool.poetry.group.dev.dependencies]
+aiotraq = {path = "libs/aiotraq", develop = true}
+python-dotenv = "^1.0.1"
+

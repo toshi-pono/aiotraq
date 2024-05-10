@@ -1,2 +1,6 @@
 project_name_override: aiotraq
 package_name_override: aiotraq
+content_type_overrides:
+  image/jpeg: application/octet-stream
+  image/png: application/octet-stream
+  image/gif: application/octet-stream

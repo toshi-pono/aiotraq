@@ -1,11 +1,12 @@
 from http import HTTPStatus
+from io import BytesIO
 from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...types import UNSET, Response, Unset
+from ...types import UNSET, File, Response, Unset
 
 
 def _get_kwargs(
@@ -27,9 +28,10 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[str]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[File]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = response.text
+        response_200 = File(payload=BytesIO(response.content))
+
         return response_200
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -37,7 +39,7 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[str]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[File]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -50,7 +52,7 @@ def sync_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
     token: Union[Unset, bool] = False,
-) -> Response[str]:
+) -> Response[File]:
     """QRコードを取得
 
      自身のQRコードを取得します。
@@ -64,7 +66,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[str]
+        Response[File]
     """
 
     kwargs = _get_kwargs(
@@ -82,7 +84,7 @@ def sync(
     *,
     client: Union[AuthenticatedClient, Client],
     token: Union[Unset, bool] = False,
-) -> Optional[str]:
+) -> Optional[File]:
     """QRコードを取得
 
      自身のQRコードを取得します。
@@ -96,7 +98,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        str
+        File
     """
 
     return sync_detailed(
@@ -109,7 +111,7 @@ async def asyncio_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
     token: Union[Unset, bool] = False,
-) -> Response[str]:
+) -> Response[File]:
     """QRコードを取得
 
      自身のQRコードを取得します。
@@ -123,7 +125,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[str]
+        Response[File]
     """
 
     kwargs = _get_kwargs(
@@ -139,7 +141,7 @@ async def asyncio(
     *,
     client: Union[AuthenticatedClient, Client],
     token: Union[Unset, bool] = False,
-) -> Optional[str]:
+) -> Optional[File]:
     """QRコードを取得
 
      自身のQRコードを取得します。
@@ -153,7 +155,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        str
+        File
     """
 
     return (

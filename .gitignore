@@ -151,3 +151,5 @@ wandb/
 
 *.pkl
 *.bin
+
+tmp/

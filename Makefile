@@ -4,17 +4,27 @@ help: Makefile
 	@sed -n 's/^##//p' $< | awk -F':' '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' | sort | sed -e 's/^/ /'
 
 ## api_generate: Generate API client code.
+# HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
 .PHONY: api_generate
 api_generate:
-	cd libs && poetry run openapi-python-client generate \
-		--url https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml \
+	mkdir -p tmp
+	curl -o tmp/v3-api.yaml https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml
+	sed -i -e "s/default: '0000-01-01T00:00:00.000000Z'/default: '0001-01-01T00:00:00.000000Z'/g" tmp/v3-api.yaml
+	cd libs && poetry run openapi-python-client update \
+		--path ../tmp/v3-api.yaml \
 		--custom-template-path=../templates/aiotraq \
 		--config ../api-client-config.yaml
+	rm -rf tmp
 
 ## api_update: Generate API client code.
+# HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
 .PHONY: api_update
 api_update:
+	mkdir -p tmp
+	curl -o tmp/v3-api.yaml https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml
+	sed -i -e "s/default: '0000-01-01T00:00:00.000000Z'/default: '0001-01-01T00:00:00.000000Z'/g" tmp/v3-api.yaml
 	cd libs && poetry run openapi-python-client update \
-		--url https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml \
+		--path ../tmp/v3-api.yaml \
 		--custom-template-path=../templates/aiotraq \
 		--config ../api-client-config.yaml
+	rm -rf tmp

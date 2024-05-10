@@ -6,7 +6,7 @@
 {% endif %}
 name = "{{ project_name }}"
 version = "{{ package_version }}"
-description = "Async ready traQ API Client for Python"
+description = "Async ready traQ API Client"
 authors = []
 readme = "README.md"
 {% if pdm %}requires-python = ">=3.8,<4.0"{% endif %}
@@ -29,6 +29,10 @@ dependencies = [
 distribution = true
 {% endif %}
 {% if poetry %}
+
+
+[tool.poetry.urls]
+"Source Code" = "https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq"
 
 [tool.poetry.dependencies]
 python = "^3.8"

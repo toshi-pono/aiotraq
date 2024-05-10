@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "aiotraq"
 version = "0.1.0"
-description = "Async ready traQ API Client for Python"
+description = "Async ready traQ API Client"
 authors = []
 readme = "README.md"
 packages = [
@@ -9,6 +9,10 @@ packages = [
 ]
 include = ["CHANGELOG.md", "aiotraq/py.typed"]
 repository = "https://github.com/toshi-pono/aiotraq"
+
+
+[tool.poetry.urls]
+"Source Code" = "https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq"
 
 
 [tool.poetry.dependencies]

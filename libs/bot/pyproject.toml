@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "aiotraq-bot"
+version = "0.1.0"
+description = "Async ready traQ Bot library"
+authors = ["toshi00"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/toshi-pono/aiotraq"
+
+
+[tool.poetry.urls]
+"Source Code" = "https://github.com/toshi-pono/aiotraq/tree/main/libs/bot"
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

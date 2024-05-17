@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Union
 from aiotraq_bot.models.event import (
     BotMessageStampsUpdatedPayload,
     ChannelCreatedPayload,
@@ -91,3 +91,11 @@ def convert_json_to_model(json_data: dict, event: str) -> EventModel:
         raise ValidationError(f"Invalid event: {event}")
 
     return event_models[event].model_validate(json_data)
+
+
+def model_to_event_type(model: Any) -> str | None:
+    for event, model_type in event_models.items():
+        if model == model_type:
+            return event
+
+    return None

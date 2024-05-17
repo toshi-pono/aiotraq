@@ -1,12 +1,10 @@
 import inspect
 from typing import Awaitable, Callable
-from aiotraq_bot.models.event_models import convert_json_to_model
+from aiotraq_bot.models.event_models import EventModel, convert_json_to_model, model_to_event_type
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 import uvicorn
 from fastapi import FastAPI, Header, Response
-
-from aiotraq_bot.models.event import JoinedPayload
 
 EventHandlerType = Callable[..., Awaitable[None]]
 
@@ -41,37 +39,66 @@ class TraqHttpBot:
             "USER_GROUP_ADMIN_REMOVED": [],
         }
 
-    async def handle_event(self, json_data: dict, event: str) -> None:
+    async def handle_event(self, json_data: dict, event: str, request_id: str) -> None:
         payload = convert_json_to_model(json_data, event)
         if event not in self.handlers:
             return
 
         for handler in self.handlers[event]:
             sig = inspect.signature(handler)
-            if len(sig.parameters) == 0:
-                await handler()
-            elif len(sig.parameters) == 1:
-                # TODO: check if the handler expects the correct payload type (?)
-                await handler(payload)
-            else:
-                raise ValueError("Invalid handler signature: must be 0 or 1 arguments")
+            # 変数名が payload または， dict もしくは eventPayload のアノテーション  の引数に payload を渡す
+            # 変数名が event の引数に event を渡す
+            # 変数名が id の引数に id を渡す
+            params: dict[str, str | EventModel | None] = {}
+            for param in sig.parameters.values():
+                if param.name == "payload":
+                    params[param.name] = payload
+                elif param.name == "event":
+                    params[param.name] = event
+                elif param.name == "id":
+                    params[param.name] = request_id
+                elif param.annotation == dict or model_to_event_type(param.annotation) is not None:
+                    params[param.name] = payload
+                else:
+                    params[param.name] = None
+
+            await handler(**params)
 
     def _register_handler(self, event: str, func: EventHandlerType) -> None:
         self.handlers[event].append(func)
 
-    def joind(
-        self, func: Callable[[JoinedPayload | None], Awaitable[None]]
-    ) -> Callable[[JoinedPayload | None], Awaitable[None]]:
-        """Register a handler for the JOINED event.
+    def event(self, event: str | None = None) -> Callable[[EventHandlerType], EventHandlerType]:
+        def decorator(func: EventHandlerType) -> EventHandlerType:
+            if event is None:
+                # func の引数の型を見て event を決定する
+                sig = inspect.signature(func)
+                if len(sig.parameters) == 0:
+                    raise ValueError("cannot determine event type")
 
-        Args:
-            func (Callable[[JoinedPayload | None], Awaitable[None]]): The handler function.
+                params = list(sig.parameters.values())
+                for param in params:
+                    print(param.annotation)
+                    ev_type = model_to_event_type(param.annotation)
+                    if ev_type is not None:
+                        self._register_handler(ev_type, func)
+                        return func
+                raise ValueError("cannot determine event type")
 
-        Returns:
-            Callable[[JoinedPayload | None], Awaitable[None]]: The handler function.
-        """
-        self._register_handler("JOINED", func)
-        return func
+            elif event in self.handlers:
+                self._register_handler(event, func)
+            else:
+                raise ValueError(f"Invalid event: {event}")
+
+            return func
+
+        return decorator
+
+    def run(self, hostname: str = "0.0.0.0", port: int = 8080) -> None:
+        self.server = TraqHttpBotServer(hostname, port, self)
+        try:
+            self.server.run()
+        except KeyboardInterrupt:
+            pass
 
 
 class TraqHttpBotServer:
@@ -86,11 +113,11 @@ class TraqHttpBotServer:
     async def handle_bot_request(
         self,
         json_data: dict,
-        x_traq_verification_token: str | None = Header(default=None),
+        x_traq_bot_token: str | None = Header(default=None),
         x_traq_bot_event: str | None = Header(default=None),
         x_traq_bot_request_id: str | None = Header(default=None),
     ) -> Response:
-        if x_traq_verification_token != self.bot.verification_token:
+        if x_traq_bot_token != self.bot.verification_token:
             print("Invalid verification token")
             return JSONResponse(status_code=401, content={"message": "Invalid verification token"})
         if x_traq_bot_event is None:
@@ -101,8 +128,8 @@ class TraqHttpBotServer:
             return JSONResponse(status_code=400, content={"message": "No X-TRAQ-BOT-REQUEST-ID"})
 
         try:
-            await self.bot.handle_event(json_data, x_traq_bot_event)
-            return JSONResponse(status_code=204, content={})
+            await self.bot.handle_event(json_data, x_traq_bot_event, x_traq_bot_request_id)
+            return Response(status_code=204, content=None)
         except ValidationError as e:
             print(f"Validation error: {e}")
             return JSONResponse(status_code=400, content={"message": "Validation error"})

@@ -28,3 +28,10 @@ api_update:
 		--custom-template-path=../templates/aiotraq \
 		--config ../api-client-config.yaml
 	rm -rf tmp
+
+
+## test: Run tests
+.PHONY: test
+test:
+	poetry run ruff check .
+	poetry run mypy .

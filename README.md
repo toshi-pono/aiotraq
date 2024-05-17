@@ -2,8 +2,9 @@
 
 async ready API wrapper and bot library for [traQ](https://github.com/traPtitech/traQ) written in Python.
 
-[![PyPI version](https://badge.fury.io/py/aiotraq.svg)](https://badge.fury.io/py/aiotraq)
-[![PyPI version](https://badge.fury.io/py/aiotraq-bot.svg)](https://badge.fury.io/py/aiotraq-bot)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/toshi-pono/aiotraq/blob/main/LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/aiotraq?label=aiotraq)](https://pypi.org/project/aiotraq/)
+[![PyPI - Version](https://img.shields.io/pypi/v/aiotraq-bot?label=aiotraq-bot)](https://pypi.org/project/aiotraq-bot/)
 
 ## Installation
 
@@ -16,10 +17,10 @@ pip install aiotraq-bot
 
 詳細は各リンク先を参照してください。
 
-| Name                                                                    | Description                              |
-| ----------------------------------------------------------------------- | ---------------------------------------- |
-| [aiotraq](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq) | 非同期リクエスト対応の traQ API ラッパー |
-| [aiotraq-bot](https://github.com/toshi-pono/aiotraq/tree/main/libs/bot) | FastAPI を使った traQ Bot ライブラリ     |
+| Name                                                                    | Description                              | Version                                                                                                                 |
+| ----------------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [aiotraq](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq) | 非同期リクエスト対応の traQ API ラッパー | [![PyPI - Version](https://img.shields.io/pypi/v/aiotraq?label=aiotraq)](https://pypi.org/project/aiotraq/)             |
+| [aiotraq-bot](https://github.com/toshi-pono/aiotraq/tree/main/libs/bot) | FastAPI を使った traQ Bot ライブラリ     | [![PyPI - Version](https://img.shields.io/pypi/v/aiotraq-bot?label=aiotraq-bot)](https://pypi.org/project/aiotraq-bot/) |
 
 ## License
 

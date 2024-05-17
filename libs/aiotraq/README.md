@@ -2,7 +2,8 @@
 
 Async ready traQ API Client for Python
 
-[![PyPI version](https://badge.fury.io/py/aiotraq.svg)](https://badge.fury.io/py/aiotraq)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/toshi-pono/aiotraq/blob/main/LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/aiotraq)](https://pypi.org/project/aiotraq/)
 
 ## Installation
 

@@ -10,7 +10,27 @@ EventHandlerType = Callable[..., Awaitable[None]]
 
 
 class TraqHttpBot:
-    def __init__(self, verification_token: str):
+    """Create a new TraqHttpBot
+
+    Args:
+        verification_token (str): The verification token for the bot
+
+    Examples:
+    .. code-block:: python
+        import os
+        from aiotraq_bot import TraqHttpBot
+
+        bot = TraqHttpBot(verification_token=os.getenv("BOT_VERIFICATION_TOKEN"))
+
+        @bot.event()
+        async def on_message(payload: MessageCreatedPayload):
+            print(payload)
+
+        if __name__ == "__main__":
+            bot.run()
+    """
+
+    def __init__(self, verification_token: str | None):
         self.verification_token = verification_token
         self.handlers: dict[str, list[EventHandlerType]] = {
             "PING": [],
@@ -68,6 +88,22 @@ class TraqHttpBot:
         self.handlers[event].append(func)
 
     def event(self, event: str | None = None) -> Callable[[EventHandlerType], EventHandlerType]:
+        """Register an event handler
+
+        Args:
+            event (str | None): The event to handle
+
+        Examples:
+        .. code-block:: python
+            @bot.event("MESSAGE_CREATED")
+            async def on_message_created(payload):
+                print(payload)
+
+            @bot.event()
+            async def on_ping(payload: MessageCreatedPayload):
+                print(payload)
+        """
+
         def decorator(func: EventHandlerType) -> EventHandlerType:
             if event is None:
                 # func の引数の型を見て event を決定する
@@ -77,7 +113,6 @@ class TraqHttpBot:
 
                 params = list(sig.parameters.values())
                 for param in params:
-                    print(param.annotation)
                     ev_type = model_to_event_type(param.annotation)
                     if ev_type is not None:
                         self._register_handler(ev_type, func)
@@ -94,6 +129,12 @@ class TraqHttpBot:
         return decorator
 
     def run(self, hostname: str = "0.0.0.0", port: int = 8080) -> None:
+        """Run the bot
+
+        Args:
+            hostname (str): The hostname to bind to (default: "0.0.0.0")
+            port (int): The port to bind to (default: 8080)
+        """
         self.server = TraqHttpBotServer(hostname, port, self)
         try:
             self.server.run()

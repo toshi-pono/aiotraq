@@ -2,6 +2,17 @@
 
 async ready API wrapper and bot library for [traQ](https://github.com/traPtitech/traQ) written in Python.
 
+## Installation
+
+TODO
+
+## Projects
+
+| Name                                                                    | Description                              |
+| ----------------------------------------------------------------------- | ---------------------------------------- |
+| [aiotraq](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq) | 非同期リクエスト対応の traQ API ラッパー |
+| [aiotraq-bot](https://github.com/toshi-pono/aiotraq/tree/main/libs/bot) | FastAPI を使った traQ Bot ライブラリ     |
+
 ## License
 
 This project is licensed under the terms of the MIT license.

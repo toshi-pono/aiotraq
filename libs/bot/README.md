@@ -2,11 +2,28 @@
 
 Async ready traQ Bot library written in Python.
 
+[![PyPI version](https://badge.fury.io/py/aiotraq-bot.svg)](https://badge.fury.io/py/aiotraq-bot)
+
+## Requirements
+
+aiotraq-bot は以下のライブラリを使用しています。
+
+- [FastAPI](https://fastapi.tiangolo.com/): サーバーの実装
+- [Uvicorn](https://www.uvicorn.org/): サーバーの実行
+- [Pydantic](https://docs.pydantic.dev/latest/): データのバリデーション
+
 ## Installation
 
-TODO
+```bash
+pip install aiotraq-bot
+```
 
 ## Usage
+
+`TraqHttpBot` を使って http bot を作成することができます。
+
+`traQ->BOTサーバー`へのイベント受け取り部分を補助します。
+`BOTサーバー->traQ`へのイベント送信は [aiotraq](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq) 等を利用してください。
 
 ```python
 import os

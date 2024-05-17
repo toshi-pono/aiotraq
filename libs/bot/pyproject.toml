@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiotraq-bot"
-version = "0.1.0"
+version = "0.1.1"
 description = "Async ready traQ Bot library"
 authors = ["toshi00"]
 license = "MIT"

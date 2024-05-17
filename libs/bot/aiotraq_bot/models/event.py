@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from aiotraq_bot.models.common import (
+from .common import (
     BasePayload,
     ChannelPayload,
     MessagePayload,

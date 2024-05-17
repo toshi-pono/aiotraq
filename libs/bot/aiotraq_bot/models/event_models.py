@@ -1,5 +1,5 @@
 from typing import Any, Union
-from aiotraq_bot.models.event import (
+from .event import (
     BotMessageStampsUpdatedPayload,
     ChannelCreatedPayload,
     ChannelTopicChangedPayload,

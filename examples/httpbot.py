@@ -6,7 +6,7 @@ from aiotraq import AuthenticatedClient
 from aiotraq.api.message import post_direct_message
 from aiotraq.models.post_message_request import PostMessageRequest
 from aiotraq_bot import TraqHttpBot
-from aiotraq_bot.models.event import DirectMessageCreatedPayload
+from aiotraq_bot.models import DirectMessageCreatedPayload
 
 
 dotenv_path = join(dirname(__file__), ".env")
@@ -34,4 +34,5 @@ async def on_direct_message_created(payload: DirectMessageCreatedPayload) -> Non
 
 
 # Run the bot
-bot.run(port=8080)
+if __name__ == "__main__":
+    bot.run(port=8080)

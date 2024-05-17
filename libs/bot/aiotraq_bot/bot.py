@@ -1,10 +1,12 @@
 import inspect
 from typing import Awaitable, Callable
-from aiotraq_bot.models.event_models import EventModel, convert_json_to_model, model_to_event_type
+from fastapi import FastAPI, Header, Response
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 import uvicorn
-from fastapi import FastAPI, Header, Response
+
+from .models import EventModel, convert_json_to_model, model_to_event_type
+
 
 EventHandlerType = Callable[..., Awaitable[None]]
 

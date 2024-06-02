@@ -1,0 +1,23 @@
+changelog:
+  exclude:
+    authors:
+      - github-actions
+  categories:
+    - title: "🚀 Features"
+      labels:
+        - "enhancement"
+    - title: "🐛 Bug Fixes"
+      labels:
+        - "bug"
+    - title: "🔧 Refactoring"
+      labels:
+        - "refactor"
+    - title: "📖 Documentation"
+      labels: 
+        - "documentation"
+    - title: "✅ Tests"
+      labels: 
+        - "test"
+    - title: Other Changes 🛠
+      labels:
+        - "*"

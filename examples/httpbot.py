@@ -30,7 +30,7 @@ async def on_direct_message_created(payload: DirectMessageCreatedPayload) -> Non
     )
     with client as cl:
         # Send a message to the user "Hello, World!"
-        message = await post_direct_message.asyncio(user_id=user_id, client=cl, body=message)
+        _ = await post_direct_message.asyncio(user_id=user_id, client=cl, body=message)
 
 
 # Run the bot

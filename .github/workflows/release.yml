@@ -58,6 +58,8 @@ jobs:
   test-pypi-publish:
     needs: [build]
     uses: ./.github/workflows/_test_release.yml
+    permissions:
+      id-token: write
     with:
       working-directory: ${{ inputs.working-directory }}
     secrets: inherit

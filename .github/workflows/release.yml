@@ -73,13 +73,12 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ env.PYTHON_VERSION}} + Poetry ${{ env.POETRY_VERSION }}
-        uses: "./.github/actions/poetry_setup"
+
+      - uses: actions/download-artifact@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          poetry-version: ${{ env.POETRY_VERSION }}
-          working-directory: ${{ inputs.working-directory }}
-          cache-key: release
+          name: dist
+          path: ${{ inputs.working-directory }}/dist/
+
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

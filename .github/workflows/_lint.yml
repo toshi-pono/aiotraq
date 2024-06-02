@@ -1,0 +1,56 @@
+name: lint
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+        description: "From which folder this pipeline executes"
+
+env:
+  POETRY_VERSION: "1.8.3"
+  WORKDIR: ${{ inputs.working-directory == '' && '.' || inputs.working-directory }}
+  RUFF_OUTPUT_FORMAT: github
+
+jobs:
+  build:
+    name: "make lint #${{ matrix.python-version }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.12"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }} + Poetry ${{ env.POETRY_VERSION }}
+        uses: "./.github/actions/poetry_setup"
+        with:
+          python-version: ${{ matrix.python-version }}
+          poetry-version: ${{ env.POETRY_VERSION }}
+          working-directory: ${{ inputs.working-directory }}
+          cache-key: lint-with-extras
+      - name: Check Poetry File
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+        run: poetry check
+      - name: Check lock file
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+        run: poetry check --lock
+      - name: Install dependencies
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+        run: poetry install --with dev
+      - name: Get .mypy_cache to speed up mypy
+        uses: actions/cache@v4
+        env:
+          SEGMENT_DOWNLOAD_TIMEOUT_MIN: "2"
+        with:
+          path: |
+            ${{ env.WORKDIR }}/.mypy_cache
+          key: mypy-lint-${{ runner.os }}-${{ runner.arch }}-py${{ matrix.python-version }}-${{ inputs.working-directory }}-${{ hashFiles(format('{0}/poetry.lock', inputs.working-directory)) }}
+      - name: Lint
+        working-directory: ${{ inputs.working-directory }}
+        run: make lint

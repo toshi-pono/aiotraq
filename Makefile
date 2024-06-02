@@ -31,7 +31,11 @@ api_update:
 
 
 ## test: Run tests
-.PHONY: test
-test:
+.PHONY: test_all
+test_all:
 	poetry run ruff check .
 	poetry run mypy .
+	cd libs/aiotraq && poetry run ruff check .
+	cd libs/aiotraq && poetry run mypy .
+	cd libs/bot && poetry run ruff check .
+	cd libs/bot && poetry run mypy .

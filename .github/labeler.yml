@@ -1,0 +1,15 @@
+aiotraq:
+  - changed-files:
+      - any-glob-to-any-file: 'libs/aiotraq/**'
+aiotraq-bot:
+  - changed-files:
+      - any-glob-to-any-file: 'libs/bot/**'
+
+
+enhancement:
+  - head-branch: ['^feature/']
+bug:
+  - head-branch: ['^fix/', '^hotfix/']
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.md', 'examples/**']

@@ -2,9 +2,10 @@
 
 async ready API wrapper and bot library for [traQ](https://github.com/traPtitech/traQ) written in Python.
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/toshi-pono/aiotraq/blob/main/LICENSE)
 [![PyPI - Version](https://img.shields.io/pypi/v/aiotraq?label=aiotraq)](https://pypi.org/project/aiotraq/)
 [![PyPI - Version](https://img.shields.io/pypi/v/aiotraq-bot?label=aiotraq-bot)](https://pypi.org/project/aiotraq-bot/)
+[![CI](https://github.com/toshi-pono/aiotraq/actions/workflows/ci.yml/badge.svg)](https://github.com/toshi-pono/aiotraq/actions/workflows/ci.yml)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/toshi-pono/aiotraq/blob/main/LICENSE)
 
 ## Installation
 

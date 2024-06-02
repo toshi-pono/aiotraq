@@ -2,8 +2,9 @@
 
 Async ready traQ Bot library written in Python.
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/toshi-pono/aiotraq/blob/main/LICENSE)
 [![PyPI - Version](https://img.shields.io/pypi/v/aiotraq-bot)](https://pypi.org/project/aiotraq-bot/)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/toshi-pono/aiotraq/blob/main/LICENSE)
+[![CI](https://github.com/toshi-pono/aiotraq/actions/workflows/ci.yml/badge.svg)](https://github.com/toshi-pono/aiotraq/actions/workflows/ci.yml)
 
 ## Requirements
 

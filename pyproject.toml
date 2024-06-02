@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiotraq-monorepo"
-version = "0.1.1"
+version = "0.1.2"
 description = "Async ready traQ Developper toolkit"
 authors = ["toshi00"]
 license = "MIT"

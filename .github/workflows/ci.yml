@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  POETRY_VERSION: "1.8.3"
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            libs/aiotraq:
+              - "libs/aiotraq/**"
+            libs/bot:
+              - "libs/bot/**"
+  lint:
+    name: cd ${{ matrix.working-directory }} && make lint
+    needs: [changes]
+    if: ${{ needs.changes.outputs.packages != '[]' }}
+    strategy:
+      matrix:
+        working-directory: ${{ fromJson(needs.changes.outputs.packages) }}
+    uses: ./.github/workflows/_lint.yml
+    with:
+      working-directory: ${{ matrix.working-directory }}
+    secrets: inherit
+  ci_success:
+    name: "CI Success"
+    needs: [changes, lint]
+    if: |
+      always()
+    env:
+      JOBS_JSON: ${{ toJson(needs) }}
+      RESULTS_JSON: ${{ toJson(needs.*.outputs) }}
+      EXIT_CODE: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && '0' || '1'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "echo result"
+        run: |
+          echo $RESULTS_JSON
+          echo $JOBS_JSON
+          echo "Exit code: $EXIT_CODE"
+          exit $EXIT_CODE

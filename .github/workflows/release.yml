@@ -1,0 +1,86 @@
+name: release
+run-name: Release ${{ inputs.working-directory }} by @${{ github.actor }}
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+        description: "From which folder this pipeline executes"
+  workflow_dispatch:
+    inputs:
+      working-directory:
+        required: true
+        type: choice
+        description: "From which folder this pipeline executes"
+        options:
+          - "libs/aiotraq"
+          - "libs/bot"
+
+env:
+  PYTHON_VERSION: "3.12"
+  POETRY_VERSION: "1.8.3"
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    outputs:
+      pkg-name: ${{ steps.check-version.outputs.pkg-name }}
+      version: ${{ steps.check-version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ env.PYTHON_VERSION}} + Poetry ${{ env.POETRY_VERSION }}
+        uses: "./.github/actions/poetry_setup"
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          poetry-version: ${{ env.POETRY_VERSION }}
+          working-directory: ${{ inputs.working-directory }}
+          cache-key: release
+      - name: build
+        run: poetry build
+        working-directory: ${{ inputs.working-directory }}
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ${{ inputs.working-directory }}/dist/
+      - name: check-version
+        id: check-version
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          echo pkg-name="$(poetry version | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo version="$(poetry version --short)" >> $GITHUB_OUTPUT
+  test-pypi-publish:
+    needs: [build]
+    uses: ./.github/workflows/_test_release.yml
+    with:
+      working-directory: ${{ inputs.working-directory }}
+    secrets: inherit
+  publish:
+    needs: [build, test-pypi-publish]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ env.PYTHON_VERSION}} + Poetry ${{ env.POETRY_VERSION }}
+        uses: "./.github/actions/poetry_setup"
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          poetry-version: ${{ env.POETRY_VERSION }}
+          working-directory: ${{ inputs.working-directory }}
+          cache-key: release
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: ${{ inputs.working-directory }}/dist/
+          verbose: true
+          print-hash: true

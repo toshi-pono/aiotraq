@@ -60,7 +60,7 @@ runs:
 
         # Ensure everything got set up correctly.
         /opt/pipx/venvs/poetry/bin/python --version
-        /opt/pipx_bin/poetry --version
+        /opt/pipx/venvs/poetry/bin/poetry --version
 
     - name: Install Poetry
       if: steps.cache-bin-poetry.outputs.cache-hit != 'true'

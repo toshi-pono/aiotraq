@@ -17,6 +17,7 @@ on:
         options:
           - "libs/aiotraq"
           - "libs/bot"
+          - "libs/message"
 
 env:
   PYTHON_VERSION: "3.12"

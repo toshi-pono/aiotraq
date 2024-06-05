@@ -4,6 +4,9 @@ aiotraq:
 aiotraq-bot:
   - changed-files:
       - any-glob-to-any-file: 'libs/bot/**'
+aiotraq-message:
+  - changed-files:
+      - any-glob-to-any-file: 'libs/message/**'
 
 
 enhancement:

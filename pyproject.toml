@@ -18,6 +18,7 @@ openapi-python-client = "^0.19.1"
 
 [tool.poetry.group.dev.dependencies]
 aiotraq = { path = "libs/aiotraq", develop = true }
+aiotraq-message = { path = "libs/message", develop = true }
 python-dotenv = "^1.0.1"
 aiotraq-bot = { path = "libs/bot", develop = true }
 ruff = ">=0.2,<0.4"

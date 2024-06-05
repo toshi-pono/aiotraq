@@ -30,12 +30,14 @@ api_update:
 	rm -rf tmp
 
 
-## test: Run tests
-.PHONY: test_all
-test_all:
+## test: Run lint
+.PHONY: lint_all
+lint_all:
 	poetry run ruff check .
 	poetry run mypy .
 	cd libs/aiotraq && poetry run ruff check .
 	cd libs/aiotraq && poetry run mypy .
 	cd libs/bot && poetry run ruff check .
 	cd libs/bot && poetry run mypy .
+	cd libs/message && poetry run ruff check .
+	cd libs/message && poetry run mypy .

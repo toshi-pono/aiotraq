@@ -29,6 +29,8 @@ jobs:
               - "libs/aiotraq/**"
             libs/bot:
               - "libs/bot/**"
+            libs/message:
+              - "libs/message/**"
   lint:
     name: cd ${{ matrix.working-directory }} && make lint
     needs: [changes]

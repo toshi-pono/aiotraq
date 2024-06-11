@@ -27,7 +27,7 @@ import asyncio
 from aiotraq_bot import TraqHttpBot
 from aiotraq_message import TraqMessage
 
-async def component(am: TraqMessage, *args):
+async def component(am: TraqMessage):
     am.write("Hello, World!")
 
     with am.spinner():

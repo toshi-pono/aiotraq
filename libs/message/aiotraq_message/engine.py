@@ -102,7 +102,7 @@ class MessageEngine:
             return
 
         body = PostMessageRequest(
-            content="\n".join([msg.message for msg in self.messages]),
+            content="\n".join([str(msg.message) for msg in self.messages]),
             embed=self.embed,
         )
         self.prev_message = body.content
@@ -130,7 +130,7 @@ class MessageEngine:
             return
 
         body = PostMessageRequest(
-            content="\n".join([msg.message for msg in self.messages]),
+            content="\n".join([str(msg.message) for msg in self.messages]),
             embed=self.embed,
         )
         if self.prev_message == body.content:

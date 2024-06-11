@@ -23,8 +23,9 @@ response = TraqMessageManager(bot, BOT_ACCESS_TOKEN, "https://q.trap.jp/api/v3")
 
 
 # Create a component
-async def component(am: TraqMessage, *args: Any) -> None:
+async def component(am: TraqMessage, payload: str) -> None:
     am.write("Hello, World!")
+    am.write(payload)
 
     with am.spinner():
         await asyncio.sleep(5)
@@ -36,16 +37,18 @@ async def component(am: TraqMessage, *args: Any) -> None:
 @bot.event()
 async def on_direct_message_created(payload: DirectMessageCreatedPayload) -> None:
     user_id = payload.message.user.id
+    message = payload.message.plainText
 
-    await response(component, user_id=user_id)
+    await response(component, user_id=user_id, payload=message)
 
 
 # Register MESSAGE_CREATED event
 @bot.event()
 async def on_message_created(payload: MessageCreatedPayload) -> None:
     channel_id = payload.message.channelId
+    message = payload.message.plainText
 
-    await response(component, channnel_id=channel_id)
+    await response(component, channnel_id=channel_id, payload=message)
 
 
 # Run the bot

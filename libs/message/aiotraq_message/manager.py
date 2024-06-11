@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import threading
 from typing import Callable, Any, Coroutine
 from aiotraq_bot import TraqHttpBot
@@ -31,22 +32,33 @@ class TraqMessageManager:
 
     async def __call__(
         self,
-        component: Callable[[TraqMessage, tuple[Any, ...]], Coroutine[Any, Any, None]],
+        component: Callable[
+            ...,
+            Coroutine[Any, Any, None],
+        ],
+        *,
         channnel_id: str | None = None,
         user_id: str | None = None,
-        *args: Any,
+        payload: Any | None = None,
     ) -> None:
-        t = threading.Thread(target=self.__run, args=(component, channnel_id, user_id, *args), daemon=True)
+        """
+        Args:
+            component (Callable[..., Coroutine[Any, Any, None]]): The component to run
+            channnel_id (str, optional): The channel ID to run the component in. Defaults to None.
+            user_id (str, optional): The user ID to run the component for. Defaults to None.
+            payload (Any, optional): The payload to pass to the component. Defaults to None.
+        """
+        t = threading.Thread(target=self.__run, args=(component, channnel_id, user_id, payload), daemon=True)
         t.start()
         # joinを待たずに返す
         return
 
     def __run(
         self,
-        component: Callable[[TraqMessage, tuple[Any, ...]], Coroutine[Any, Any, None]],
+        component: Callable[..., Coroutine[Any, Any, None]],
         channnel_id: str | None = None,
         user_id: str | None = None,
-        *args: Any,
+        payload: Any | None = None,
     ) -> None:
         loop = asyncio.new_event_loop()
         client = AuthenticatedClient(base_url=self._base_url, token=self._access_token)
@@ -56,7 +68,16 @@ class TraqMessageManager:
 
         # engine.taskをバックグラウンドで実行 -> (componentを実行 -> engine.end)を実行
         async def component_task() -> None:
-            await component(message, *args)
+            sig = inspect.signature(component)
+            if len(sig.parameters) == 0:
+                await component()
+            elif len(sig.parameters) == 1:
+                await component(message)
+            elif len(sig.parameters) == 2:
+                await component(message, payload)
+            else:
+                raise ValueError("Invalid component signature")
+
             await engine.end()
 
         loop.run_until_complete(asyncio.gather(engine.task(), component_task()))

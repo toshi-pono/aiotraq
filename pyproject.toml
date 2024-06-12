@@ -25,6 +25,7 @@ aiotraq-bot = { path = "libs/bot", develop = true }
 ruff = ">=0.2,<0.4"
 mypy = "^1.10.0"
 pillow = "^10.3.0"
+numpy = "^1.26.4"
 
 [tool.mypy]
 show_error_context = true

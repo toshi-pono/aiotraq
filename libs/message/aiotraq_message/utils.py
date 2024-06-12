@@ -22,5 +22,6 @@ def base64_to_file(string: str) -> File | None:
 
     extention = mimetypes.guess_extension(mime)
     if extention is None:
-        return None
+        mime = "application/octet-stream"
+        extention = ""
     return File(BytesIO(data), f"image{extention}", mime)

@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 import io
 from PIL import Image
-from aiotraq.types import File
+import numpy as np
 from aiotraq_message.utils import base64_to_file, bytes_to_file
 from typing import Any, Generator
 from .engine import MessageEngine
@@ -43,7 +43,7 @@ class TraqMessage:
         """
         self.engine.remove_message(message_id)
 
-    def image(self, image: str | Image.Image | File) -> str | None:
+    def image(self, image: str | Image.Image | io.BytesIO | np.ndarray) -> str | None:
         """
         画像を表示する
 
@@ -69,8 +69,15 @@ class TraqMessage:
             image.save(output, format="PNG")
             file = bytes_to_file(output.getvalue(), "image.png", "image/png")
             return self.engine.add_file(file)
-        elif isinstance(image, File):
-            return self.engine.add_file(image)
+        elif isinstance(image, io.BytesIO):
+            file = bytes_to_file(image.getvalue(), "image.png", "image/png")
+            return self.engine.add_file(file)
+        elif isinstance(image, np.ndarray):
+            image_pil = Image.fromarray(image)
+            output = io.BytesIO()
+            image_pil.save(output, format="PNG")
+            file = bytes_to_file(output.getvalue(), "image.png", "image/png")
+            return self.engine.add_file(file)
         else:
             return None
 

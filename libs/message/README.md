@@ -27,8 +27,9 @@ import asyncio
 from aiotraq_bot import TraqHttpBot
 from aiotraq_message import TraqMessage
 
-async def component(am: TraqMessage):
+async def component(am: TraqMessage, payload: str):
     am.write("Hello, World!")
+    am.write(payload)
 
     with am.spinner():
         # heavy task
@@ -37,17 +38,18 @@ async def component(am: TraqMessage):
     am.write(":done: Done!")
 
 bot = TraqHttpBot(verification_token=os.getenv("BOT_VERIFICATION_TOKEN"))
-response = TraqMessageManager(bot, os.getenv("BOT_ACCESS_TOKEN"), "https://q.trap.jp/api/v3")
+response = TraqMessageManager(bot, os.getenv("BOT_ACCESS_TOKEN"), "https://q.trap.jp/api/v3", "https://q.trap.jp")
 
 
 @bot.event("MESSAGE_CREATED")
 async def on_message_created(payload) -> None:
     channel_id = payload.message.channelId
+    message = payload.message.plainText
 
-    await response(component, channnel_id=channel_id)
+    await response(component, channnel_id=channel_id, payload=message)
 
 if __name__ == "__main__":
-    bot.run()
+    bot.run(port=8080)
 ```
 
 ### Component
@@ -57,7 +59,7 @@ write, spinner, clear などのメソッドを使うことができます
 - write: メッセージを送信します
 - spinner: スピナーを表示します
 - clear: 送信したメッセージを空にします
-- remove: write で送信したメッセージ 1 つを削除します
+- clear_message: write で送信したメッセージ 1 つを削除します
 - image: 画像を送信します
 - pyplot: matplotlib のグラフを送信します
 - dataframe: pandas の dataframe を表形式で表示します

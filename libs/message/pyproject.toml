@@ -19,6 +19,8 @@ keywords = ["traQ", "bot", "message", "aiotraq"]
 python = ">=3.10,<4.0"
 aiotraq = "^0.1.2"
 aiotraq-bot = "^0.1.2"
+pillow = "^10.3.0"
+
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"

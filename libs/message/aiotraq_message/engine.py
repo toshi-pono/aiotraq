@@ -11,7 +11,7 @@ from aiotraq.models.post_file_request import PostFileRequest
 from aiotraq.models.post_message_request import PostMessageRequest
 from aiotraq.models.message import Message
 import uuid
-from enum import StrEnum
+from enum import Enum
 
 from aiotraq.types import File
 
@@ -20,9 +20,9 @@ WAIT_QUEUE = 0.01
 REQUEST_RATE = 0.9
 
 
-class MessageType(StrEnum):
-    TEXT = "TEXT"
-    FILE = "FILE"
+class MessageType(Enum):
+    TEXT = 0
+    FILE = 1
 
 
 @dataclass

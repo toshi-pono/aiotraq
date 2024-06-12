@@ -74,6 +74,29 @@ class TraqMessage:
         else:
             return None
 
+    def pyplot(self, fig: Any) -> str | None:
+        """
+        Matplotlib の figure を表示する
+
+        Args:
+            fig (Any): Matplotlib の figure
+
+        Returns:
+            str: 画像 ID (送信に失敗した場合はNone)
+
+        Examples:
+        .. code-block:: python
+            import matplotlib.pyplot as plt
+
+            fig, ax = plt.subplots()
+            ax.plot([1, 2, 3, 4])
+            am.pyplot(fig)
+        """
+        output = io.BytesIO()
+        fig.savefig(output, format="PNG")
+        file = bytes_to_file(output.getvalue(), "image.png", "image/png")
+        return self.engine.add_file(file)
+
     @contextmanager
     def spinner(self, message: str = ":loading: loading...") -> Generator[str, Any, None]:
         """

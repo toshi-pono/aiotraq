@@ -60,6 +60,7 @@ write, spinner, clear などのメソッドを使うことができます
 - remove: write で送信したメッセージ 1 つを削除します
 - image: 画像を送信します
 - pyplot: matplotlib のグラフを送信します
+- dataframe: pandas の dataframe を表形式で表示します
 
 ## License
 

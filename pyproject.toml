@@ -20,9 +20,12 @@ openapi-python-client = "^0.19.1"
 aiotraq = { path = "libs/aiotraq", develop = true }
 aiotraq-message = { path = "libs/message", develop = true }
 python-dotenv = "^1.0.1"
+matplotlib = "^3.9.0"
 aiotraq-bot = { path = "libs/bot", develop = true }
 ruff = ">=0.2,<0.4"
 mypy = "^1.10.0"
+pillow = "^10.3.0"
+numpy = "^1.26.4"
 
 [tool.mypy]
 show_error_context = true

@@ -1,4 +1,8 @@
 from contextlib import contextmanager
+import io
+from PIL import Image
+import numpy as np
+from aiotraq_message.utils import base64_to_file, bytes_to_file, cv2pil
 from typing import Any, Generator
 from .engine import MessageEngine
 
@@ -32,9 +36,73 @@ class TraqMessage:
 
     def clear_message(self, message_id: str) -> None:
         """
-        メッセージを削除する
+        write等で追加したメッセージを削除する
+
+        Args:
+            message_id (str): メッセージ ID
         """
         self.engine.remove_message(message_id)
+
+    def image(self, image: str | Image.Image | io.BytesIO | np.ndarray) -> str | None:
+        """
+        画像を表示する
+
+        Args:
+            image (str | Image.Image | BytesIO | np.ndarray): 画像
+
+        Returns:
+            str: 画像 ID (送信に失敗した場合はNone)
+
+        Examples:
+        .. code-block:: python
+            image_id = am.image("data:image/png;base64,xxxxxxxxxxxx")
+        """
+        if isinstance(image, str):
+            # base64 encoded image
+            # format: data:image/png;base64,xxxxxxxxxxxx
+            file = base64_to_file(image)
+            if file is None:
+                return None
+            return self.engine.add_file(file)
+        elif isinstance(image, Image.Image):
+            output = io.BytesIO()
+            image.save(output, format="PNG")
+            file = bytes_to_file(output.getvalue(), "image.png", "image/png")
+            return self.engine.add_file(file)
+        elif isinstance(image, io.BytesIO):
+            file = bytes_to_file(image.getvalue(), "image.png", "image/png")
+            return self.engine.add_file(file)
+        elif isinstance(image, np.ndarray):
+            image_pil = cv2pil(image)
+            output = io.BytesIO()
+            image_pil.save(output, format="PNG")
+            file = bytes_to_file(output.getvalue(), "image.png", "image/png")
+            return self.engine.add_file(file)
+        else:
+            return None
+
+    def pyplot(self, fig: Any) -> str | None:
+        """
+        Matplotlib の figure を表示する
+
+        Args:
+            fig (Any): Matplotlib の figure
+
+        Returns:
+            str: 画像 ID (送信に失敗した場合はNone)
+
+        Examples:
+        .. code-block:: python
+            import matplotlib.pyplot as plt
+
+            fig, ax = plt.subplots()
+            ax.plot([1, 2, 3, 4])
+            am.pyplot(fig)
+        """
+        output = io.BytesIO()
+        fig.savefig(output, format="PNG")
+        file = bytes_to_file(output.getvalue(), "image.png", "image/png")
+        return self.engine.add_file(file)
 
     @contextmanager
     def spinner(self, message: str = ":loading: loading...") -> Generator[str, Any, None]:

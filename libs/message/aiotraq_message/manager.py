@@ -3,7 +3,6 @@ import inspect
 import threading
 from typing import Callable, Any, Coroutine
 from aiotraq_bot import TraqHttpBot
-from aiotraq import AuthenticatedClient
 from .message import TraqMessage
 from .engine import MessageEngine
 
@@ -22,13 +21,14 @@ class TraqMessageManager:
         from aiotraq_message import TraqMessageManager
 
         bot = TraqHttpBot(verification_token=BOT_VERIFICATION_TOKEN)
-        response = TraqMessageManager(bot, BOT_ACCESS_TOKEN, "https://q.trap.jp/api/v3")
+        response = TraqMessageManager(bot, BOT_ACCESS_TOKEN, "https://q.trap.jp/api/v3", "https://q.trap.jp")
     """
 
-    def __init__(self, bot: TraqHttpBot, access_token: str, base_url: str):
+    def __init__(self, bot: TraqHttpBot, access_token: str, base_url: str, base_client_url: str):
         self.bot = bot
         self._access_token = access_token
         self._base_url = base_url
+        self._base_client_url = base_client_url
 
     async def __call__(
         self,
@@ -61,9 +61,15 @@ class TraqMessageManager:
         payload: Any | None = None,
     ) -> None:
         loop = asyncio.new_event_loop()
-        client = AuthenticatedClient(base_url=self._base_url, token=self._access_token)
         asyncio.set_event_loop(loop)
-        engine = MessageEngine(client, channel_id=channnel_id, user_id=user_id, embed=False)
+        engine = MessageEngine(
+            base_url=self._base_url,
+            base_client_url=self._base_client_url,
+            access_token=self._access_token,
+            channel_id=channnel_id,
+            user_id=user_id,
+            embed=False,
+        )
         message = TraqMessage(engine)
 
         # engine.taskをバックグラウンドで実行 -> (componentを実行 -> engine.end)を実行

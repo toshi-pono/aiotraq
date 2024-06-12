@@ -57,6 +57,9 @@ write, spinner, clear などのメソッドを使うことができます
 - write: メッセージを送信します
 - spinner: スピナーを表示します
 - clear: 送信したメッセージを空にします
+- remove: write で送信したメッセージ 1 つを削除します
+- image: 画像を送信します
+- pyplot: matplotlib のグラフを送信します
 
 ## License
 

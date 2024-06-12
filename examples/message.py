@@ -1,9 +1,9 @@
 import asyncio
 import os
 from os.path import join, dirname
-from typing import Any
 from aiotraq_bot.models.event import MessageCreatedPayload
 from dotenv import load_dotenv
+import numpy as np
 
 from aiotraq_bot import TraqHttpBot
 from aiotraq_bot.models import DirectMessageCreatedPayload
@@ -19,13 +19,17 @@ assert BOT_ACCESS_TOKEN is not None
 
 # Create Bot instance
 bot = TraqHttpBot(verification_token=BOT_VERIFICATION_TOKEN)
-response = TraqMessageManager(bot, BOT_ACCESS_TOKEN, "https://q.trap.jp/api/v3")
+response = TraqMessageManager(bot, BOT_ACCESS_TOKEN, "https://q.trap.jp/api/v3", "https://q.trap.jp")
 
 
 # Create a component
 async def component(am: TraqMessage, payload: str) -> None:
     am.write("Hello, World!")
     am.write(payload)
+    # Yellow Image
+    image = np.zeros((100, 100, 3), dtype=np.uint8)
+    image[:, :] = [0, 255, 255]
+    am.image(image)
 
     with am.spinner():
         await asyncio.sleep(5)

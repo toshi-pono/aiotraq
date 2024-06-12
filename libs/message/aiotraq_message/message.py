@@ -5,6 +5,7 @@ import numpy as np
 from aiotraq_message.utils import base64_to_file, bytes_to_file, cv2pil
 from typing import Any, Generator
 from .engine import MessageEngine
+import pandas as pd
 
 
 class TraqMessage:
@@ -103,6 +104,29 @@ class TraqMessage:
         fig.savefig(output, format="PNG")
         file = bytes_to_file(output.getvalue(), "image.png", "image/png")
         return self.engine.add_file(file)
+
+    def dataframe(self, df: pd.DataFrame | pd.Series, *, max_length: int = 10) -> str | None:
+        """
+        表を表示する
+
+        Args:
+            df (pd.DataFrame | pd.Series): 表
+            max_length (int): 表示する最大行数
+        """
+        # markdown で表示する
+        out_df = df
+        if isinstance(df, pd.Series):
+            out_df = df.to_frame()
+
+        # 行数が多い場合は省略して最初と最後を表示 間には省略記号を入れる
+        if len(df) > max_length:
+            shortcut = pd.DataFrame(["..."] * len(df.columns), index=df.columns).T
+            shortcut.index = ["..."]
+            out_df = pd.concat([df.head(max_length // 2), shortcut, df.tail(max_length // 2)])
+
+        markdown = out_df.to_markdown() + "\n"
+
+        return self.engine.add_message(markdown)
 
     @contextmanager
     def spinner(self, message: str = ":loading: loading...") -> Generator[str, Any, None]:

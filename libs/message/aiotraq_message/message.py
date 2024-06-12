@@ -2,7 +2,7 @@ from contextlib import contextmanager
 import io
 from PIL import Image
 import numpy as np
-from aiotraq_message.utils import base64_to_file, bytes_to_file
+from aiotraq_message.utils import base64_to_file, bytes_to_file, cv2pil
 from typing import Any, Generator
 from .engine import MessageEngine
 
@@ -48,7 +48,7 @@ class TraqMessage:
         画像を表示する
 
         Args:
-            image (str | Image.Image | File): 画像
+            image (str | Image.Image | BytesIO | np.ndarray): 画像
 
         Returns:
             str: 画像 ID (送信に失敗した場合はNone)
@@ -73,7 +73,7 @@ class TraqMessage:
             file = bytes_to_file(image.getvalue(), "image.png", "image/png")
             return self.engine.add_file(file)
         elif isinstance(image, np.ndarray):
-            image_pil = Image.fromarray(image)
+            image_pil = cv2pil(image)
             output = io.BytesIO()
             image_pil.save(output, format="PNG")
             file = bytes_to_file(output.getvalue(), "image.png", "image/png")

@@ -49,7 +49,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: "img/ogp.jpg",
+    image: "img/ogp.png",
     navbar: {
       title: "AiotraQ",
       logo: {

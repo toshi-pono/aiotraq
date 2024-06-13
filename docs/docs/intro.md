@@ -57,4 +57,11 @@ if __name__ == "__main__":
     bot.run(port=8080)
 ```
 
+## Guides
+
+- [Bot サーバーの作成](/docs/guides/bot-guide)
+
 ## API reference
+
+- [イベント一覧](/docs/api/bot-event/)
+- [メッセージコンポーネント](/docs/api/components/components-overview)

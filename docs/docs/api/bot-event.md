@@ -8,6 +8,8 @@ sidebar_label: BOT Event
 
 :::note
 各イベントの詳細は traQ BOT Console のイベントリファレンスを参照してください。
+
+BOT の権限一覧は [ソース](https://github.com/traPtitech/traQ/blob/master/service/rbac/role/bot.go)から確認できます。
 :::
 
 ## イベント一覧

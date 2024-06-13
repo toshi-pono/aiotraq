@@ -39,6 +39,10 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/toshi-pono/aiotraq/tree/main/docs/",
+          admonitions: {
+            keywords: ["border"],
+            extendDefaults: true,
+          },
         },
         theme: {
           customCss: "./src/css/custom.css",

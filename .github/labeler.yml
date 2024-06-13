@@ -15,4 +15,4 @@ bug:
   - head-branch: ['^fix/', '^hotfix/']
 documentation:
   - changed-files:
-      - any-glob-to-any-file: ['**/*.md', 'examples/**']
+      - any-glob-to-any-file: ['**/*.md', 'examples/**', 'docs/**']

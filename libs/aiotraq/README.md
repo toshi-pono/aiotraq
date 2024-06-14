@@ -1,4 +1,4 @@
-# aiotraq
+# AiotraQ
 
 Async ready traQ API Client for Python
 

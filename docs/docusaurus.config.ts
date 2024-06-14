@@ -68,12 +68,6 @@ const config: Config = {
           label: "Tutorial",
         },
         {
-          type: "docSidebar",
-          sidebarId: "apiSidebar",
-          position: "left",
-          label: "API",
-        },
-        {
           href: "https://github.com/toshi-pono/aiotraq",
           label: "GitHub",
           position: "right",

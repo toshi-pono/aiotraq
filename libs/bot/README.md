@@ -1,4 +1,4 @@
-# aiotraq-bot
+# AiotraQ-Bot
 
 Async ready traQ Bot library written in Python.
 
@@ -8,7 +8,7 @@ Async ready traQ Bot library written in Python.
 
 ## Requirements
 
-aiotraq-bot は以下のライブラリを使用しています。
+AiotraQ-Bot は以下のライブラリを使用しています。
 
 - [FastAPI](https://fastapi.tiangolo.com/): サーバーの実装
 - [Uvicorn](https://www.uvicorn.org/): サーバーの実行
@@ -25,7 +25,7 @@ pip install aiotraq-bot
 `TraqHttpBot` を使って http bot を作成することができます。
 
 `traQ->BOTサーバー`へのイベント受け取り部分を補助します。
-`BOTサーバー->traQ`へのイベント送信は [aiotraq](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq) 等を利用してください。
+`BOTサーバー->traQ`へのイベント送信は [AiotraQ](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq)、[AiotraQ-Message](https://github.com/toshi-pono/aiotraq/tree/main/libs/message) 等を利用してください。
 
 ```python
 import os
@@ -61,6 +61,8 @@ async def on_message(payload: MessageCreatedPayload):
 async def on_message(payload):
     print(payload)
 ```
+
+詳細は [ドキュメント|Bot サーバーの作成](https://toshi-pono.github.io/aiotraq/docs/intro/)を参照してください。
 
 ## Acknowledgements
 

@@ -1,4 +1,4 @@
-# aiotraq-message
+# AiotraQ-Message
 
 streamlit 風の構文を用いてインタラクティブなメッセージ送信に対応するプラグインです。
 
@@ -14,10 +14,12 @@ pip install aiotraq-message
 
 ## Requirements
 
-aiotraq-message は aiotraq に依存しています
+AiotraQ-Message は AiotraQ に依存しています
 
-- [aiotraq](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq)
-- [aiotraq-bot](https://github.com/toshi-pono/aiotraq/tree/main/libs/bot)
+- [AiotraQ](https://github.com/toshi-pono/aiotraq/tree/main/libs/aiotraq)
+- [AiotraQ-Bot](https://github.com/toshi-pono/aiotraq/tree/main/libs/bot)
+
+![overview](../../docs/docs/overview.svg)
 
 ## Usage
 
@@ -63,6 +65,8 @@ write, spinner, clear などのメソッドを使うことができます
 - image: 画像を送信します
 - pyplot: matplotlib のグラフを送信します
 - dataframe: pandas の dataframe を表形式で表示します
+
+詳細: [ドキュメント｜ Components](https://toshi-pono.github.io/aiotraq/docs/api/components/components-overview/)
 
 ## License
 

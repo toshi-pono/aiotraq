@@ -1,20 +1,22 @@
 import asyncio
+import uuid
+from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from aiotraq import AuthenticatedClient
-from aiotraq.api.message import post_message, post_direct_message, edit_message
-from aiotraq.api.user import get_user_dm_channel
-from aiotraq.api.file import post_file
-from aiotraq.models.dm_channel import DMChannel
-from aiotraq.models.file_info import FileInfo
-from aiotraq.models.post_file_request import PostFileRequest
-from aiotraq.models.post_message_request import PostMessageRequest
-from aiotraq.models.message import Message
-import uuid
 from enum import Enum
 
+from aiotraq import AuthenticatedClient
+from aiotraq.api.file import post_file
+from aiotraq.api.message import (add_message_stamp, edit_message,
+                                 post_direct_message, post_message)
+from aiotraq.api.user import get_user_dm_channel
+from aiotraq.models.dm_channel import DMChannel
+from aiotraq.models.file_info import FileInfo
+from aiotraq.models.message import Message
+from aiotraq.models.post_file_request import PostFileRequest
+from aiotraq.models.post_message_request import PostMessageRequest
+from aiotraq.models.post_message_stamp_request import PostMessageStampRequest
 from aiotraq.types import File
-
 
 WAIT_QUEUE = 0.01
 REQUEST_RATE = 0.9
@@ -48,6 +50,8 @@ class MessageEngine:
         self._access_token = access_token
         self.updated_at: datetime | None = None
         self.messages: list[InnerMessage] = []
+        self.stamps: list[str] = []
+        self.sended_stamps: list[str] = []
         self.message_id: str | None = None
         self.user_id = user_id
         self.embed = embed
@@ -83,6 +87,13 @@ class MessageEngine:
         self.messages.append(InnerMessage(id=message_id, message=message, type=MessageType.TEXT))
         self.request_update()
         return message_id
+
+    def add_stamp(self, stamp_id: str) -> None:
+        """
+        stamp を追加する
+        """
+        self.stamps.append(stamp_id)
+        self.request_update()
 
     def add_file(self, file: File) -> str:
         """
@@ -147,6 +158,7 @@ class MessageEngine:
                 await self.event.wait()
                 self.event.clear()
                 await self.__update_message(c)
+                await self.__update_stamps(c)
 
             await self.__fflush(c)
 
@@ -180,6 +192,25 @@ class MessageEngine:
             await self.__update_send_message(c)
             self.updated_at = datetime.now()
             return
+
+    async def __update_stamps(self, c: AuthenticatedClient) -> None:
+        unsent_stamps = self.stamps[len(self.sended_stamps):]
+        if len(unsent_stamps) == 0:
+            return
+        if self.message_id is None:
+            return
+
+        counter = Counter(unsent_stamps)
+        result = [(key, counter[key]) for key in dict.fromkeys(unsent_stamps)]
+        for stamp_id, count in result:
+            body = PostMessageStampRequest(count=count)
+            await add_message_stamp.asyncio_detailed(
+                message_id=self.message_id,
+                stamp_id=stamp_id,
+                client=c,
+                body=body,
+            )
+        self.sended_stamps = self.stamps[:]
 
     async def __init_send_message(self, c: AuthenticatedClient) -> None:
         if self.channel_id is None and self.user_id is None:

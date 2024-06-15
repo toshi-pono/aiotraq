@@ -44,6 +44,15 @@ class TraqMessage:
         """
         self.engine.remove_message(message_id)
 
+    def stamp(self, stamp_id: str) -> None:
+        """
+        スタンプを押す
+
+        Args:
+            stamp_id (str): スタンプ ID
+        """
+        self.engine.add_stamp(stamp_id)
+
     def image(self, image: str | Image.Image | io.BytesIO | np.ndarray) -> str | None:
         """
         画像を表示する

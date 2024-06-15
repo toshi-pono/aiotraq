@@ -223,6 +223,7 @@ class MessageEngine:
                     break
             else:
                 i += 1
+        unsent_stamps.extend(self.sended_stamps[i:])
 
         if self.message_id is None:
             return

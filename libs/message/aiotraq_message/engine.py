@@ -8,7 +8,7 @@ from enum import Enum
 from aiotraq import AuthenticatedClient
 from aiotraq.api.file import post_file
 from aiotraq.api.message import (add_message_stamp, edit_message,
-                                 post_direct_message, post_message)
+                                 post_direct_message, post_message, remove_message_stamp)
 from aiotraq.api.user import get_user_dm_channel
 from aiotraq.models.dm_channel import DMChannel
 from aiotraq.models.file_info import FileInfo
@@ -145,6 +145,20 @@ class MessageEngine:
         self.messages = []
         self.request_update()
 
+    def remove_stamp(self, stamp_id: str) -> None:
+        """
+        stamp を削除する
+        """
+        self.stamps = [stamp for stamp in self.stamps if stamp != stamp_id]
+        self.request_update()
+
+    def remove_all_stamp(self) -> None:
+        """
+        全ての stamp を削除する
+        """
+        self.stamps = []
+        self.request_update()
+
     async def end(self) -> None:
         self.is_loop = False
 
@@ -194,11 +208,36 @@ class MessageEngine:
             return
 
     async def __update_stamps(self, c: AuthenticatedClient) -> None:
-        unsent_stamps = self.stamps[len(self.sended_stamps):]
-        if len(unsent_stamps) == 0:
-            return
+        remove_stamps = set()
+        unsent_stamps = []
+
+        if len(self.stamps) == 0:
+            remove_stamps = set(self.sended_stamps)
+        else:
+            i = 0
+            for stamp in self.stamps:
+                if i >= len(self.sended_stamps):
+                    unsent_stamps.append(stamp)
+                    continue
+                while stamp != self.sended_stamps[i]:
+                    remove_stamps.add(self.sended_stamps[i])
+                    i += 1
+                    if i >= len(self.sended_stamps):
+                        unsent_stamps.append(stamp)
+                        break
+                else:
+                    i += 1
+            unsent_stamps.extend(self.sended_stamps[i:])
+
         if self.message_id is None:
             return
+
+        for stamp_id in remove_stamps:
+            await remove_message_stamp.asyncio_detailed(
+                message_id=self.message_id,
+                stamp_id=stamp_id,
+                client=c,
+            )
 
         counter = Counter(unsent_stamps)
         result = [(key, counter[key]) for key in dict.fromkeys(unsent_stamps)]

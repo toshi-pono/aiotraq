@@ -1,11 +1,14 @@
-from contextlib import contextmanager
 import io
-from PIL import Image
-import numpy as np
-from aiotraq_message.utils import base64_to_file, bytes_to_file, cv2pil
+from contextlib import contextmanager
 from typing import Any, Generator
-from .engine import MessageEngine
+
+import numpy as np
 import pandas as pd
+from PIL import Image
+
+from aiotraq_message.utils import base64_to_file, bytes_to_file, cv2pil
+
+from .engine import MessageEngine
 
 
 class TraqMessage:
@@ -52,6 +55,21 @@ class TraqMessage:
             stamp_id (str): スタンプ ID
         """
         self.engine.add_stamp(stamp_id)
+
+    def clear_stamp(self, stamp_id: str) -> None:
+        """
+        スタンプを消す
+
+        Args:
+            stamp_id (str): スタンプ ID
+        """
+        self.engine.remove_stamp(stamp_id)
+
+    def clear_all_stamp(self) -> None:
+        """
+        全てのスタンプを消す
+        """
+        self.engine.remove_all_stamp()
 
     def image(self, image: str | Image.Image | io.BytesIO | np.ndarray) -> str | None:
         """

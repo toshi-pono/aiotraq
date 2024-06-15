@@ -32,18 +32,18 @@ Bot がメッセージを受信したら、メッセージを返信する例
 import os
 import asyncio
 from aiotraq_bot import TraqHttpBot
-from aiotraq_message import TraqMessage
+from aiotraq_message import TraqMessage, TraqMessageManager
 
 
 async def component(am: TraqMessage, payload: str):
     am.write(payload)
     # long task
     with am.spinner():
-        asyncio.sleep(3)
+        await asyncio.sleep(3)
     am.write(":done: Done!")
 
 bot = TraqHttpBot(verification_token=os.getenv("BOT_VERIFICATION_TOKEN"))
-response = TraqMessageManager(bot, os.getenv("BOT_ACCESS_TOKEN"), "https://q.trap.jp/api/v3", "https://q.trap.jp")
+response = TraqMessageManager(bot, os.getenv("BOT_ACCESS_TOKEN", ""), "https://q.trap.jp/api/v3", "https://q.trap.jp")
 
 
 @bot.event("MESSAGE_CREATED")

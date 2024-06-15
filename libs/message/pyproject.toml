@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiotraq-message"
-version = "0.2.0"
+version = "0.2.1"
 description = "aiotraq Plugin that supports interactive message sending using Streamlit-style syntax for traQ"
 authors = ["toshi00"]
 license = "MIT"

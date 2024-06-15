@@ -210,20 +210,24 @@ class MessageEngine:
     async def __update_stamps(self, c: AuthenticatedClient) -> None:
         remove_stamps = set()
         unsent_stamps = []
-        i = 0
-        for stamp in self.stamps:
-            if i >= len(self.sended_stamps):
-                unsent_stamps.append(stamp)
-                continue
-            while stamp != self.sended_stamps[i]:
-                remove_stamps.add(self.sended_stamps[i])
-                i += 1
+
+        if len(self.stamps) == 0:
+            remove_stamps = set(self.sended_stamps)
+        else:
+            i = 0
+            for stamp in self.stamps:
                 if i >= len(self.sended_stamps):
                     unsent_stamps.append(stamp)
-                    break
-            else:
-                i += 1
-        unsent_stamps.extend(self.sended_stamps[i:])
+                    continue
+                while stamp != self.sended_stamps[i]:
+                    remove_stamps.add(self.sended_stamps[i])
+                    i += 1
+                    if i >= len(self.sended_stamps):
+                        unsent_stamps.append(stamp)
+                        break
+                else:
+                    i += 1
+            unsent_stamps.extend(self.sended_stamps[i:])
 
         if self.message_id is None:
             return

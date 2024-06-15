@@ -7,8 +7,8 @@ from enum import Enum
 
 from aiotraq import AuthenticatedClient
 from aiotraq.api.file import post_file
-from aiotraq.api.message import (edit_message, post_direct_message,
-                                 post_message, post_stamp)
+from aiotraq.api.message import (add_message_stamp, edit_message,
+                                 post_direct_message, post_message)
 from aiotraq.api.user import get_user_dm_channel
 from aiotraq.models.dm_channel import DMChannel
 from aiotraq.models.file_info import FileInfo
@@ -204,7 +204,7 @@ class MessageEngine:
         result = [(key, counter[key]) for key in dict.fromkeys(unsent_stamps)]
         for stamp_id, count in result:
             body = PostMessageStampRequest(count=count)
-            await post_stamp.asyncio(
+            await add_message_stamp.asyncio_detailed(
                 message_id=self.message_id,
                 stamp_id=stamp_id,
                 client=c,

@@ -17,6 +17,7 @@ api_generate:
 		--config api-client-config.yaml
 	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
 	rm -rf tmp
+	cd libs/aiotraq && poetry install
 
 ## api_update: Generate API client code.
 # HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
@@ -33,6 +34,7 @@ api_update:
 		--overwrite
 	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
 	rm -rf tmp
+	cd libs/aiotraq && poetry install
 
 
 ## test: Run lint

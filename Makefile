@@ -15,6 +15,7 @@ api_generate:
 		--output-path libs/aiotraq \
 		--custom-template-path=templates/aiotraq \
 		--config api-client-config.yaml
+	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
 	rm -rf tmp
 
 ## api_update: Generate API client code.
@@ -30,6 +31,7 @@ api_update:
 		--custom-template-path=templates/aiotraq \
 		--config api-client-config.yaml \
 		--overwrite
+	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
 	rm -rf tmp
 
 

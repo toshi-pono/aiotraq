@@ -32,6 +32,17 @@ pip install aiotraq-message
 
 ドキュメントは [こちら](https://toshi-pono.github.io/aiotraq/docs/intro/)
 
+## Development
+
+### aiotraq
+
+API Client の更新: monorepo のプロジェクトルートで以下を実行してください
+
+```bash
+poetry install
+make api_update
+```
+
 ## License
 
 This project is licensed under the terms of the MIT license.

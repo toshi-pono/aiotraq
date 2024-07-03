@@ -5,6 +5,7 @@ help: Makefile
 
 ## api_generate: Generate API client code.
 # HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
+# HACK2: Makefileが生成されないので手動でコピーしてる
 .PHONY: api_generate
 api_generate:
 	mkdir -p tmp
@@ -21,6 +22,7 @@ api_generate:
 
 ## api_update: Generate API client code.
 # HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
+# HACK2: Makefileが生成されないので手動でコピーしてる
 .PHONY: api_update
 api_update:
 	mkdir -p tmp

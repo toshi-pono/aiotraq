@@ -1,5 +1,12 @@
 [tool.ruff]
-line-length = 120
+exclude = [".venv", "venv", "__pycache__", ".git"]
 
-[tool.ruff.lint]
+line-length = 120
+indent-width = 4
 select = ["F", "I", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10

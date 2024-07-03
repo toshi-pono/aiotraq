@@ -13,7 +13,7 @@ python = "^3.10"
 
 
 [tool.poetry.group.api.dependencies]
-openapi-python-client = "^0.19.1"
+openapi-python-client = "0.21.1"
 
 
 [tool.poetry.group.dev.dependencies]

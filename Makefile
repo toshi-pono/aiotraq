@@ -5,29 +5,38 @@ help: Makefile
 
 ## api_generate: Generate API client code.
 # HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
+# HACK2: Makefileが生成されないので手動でコピーしてる
 .PHONY: api_generate
 api_generate:
 	mkdir -p tmp
 	curl -o tmp/v3-api.yaml https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml
 	sed -i -e "s/default: '0000-01-01T00:00:00.000000Z'/default: '0001-01-01T00:00:00.000000Z'/g" tmp/v3-api.yaml
-	cd libs && poetry run openapi-python-client update \
-		--path ../tmp/v3-api.yaml \
-		--custom-template-path=../templates/aiotraq \
-		--config ../api-client-config.yaml
+	poetry run openapi-python-client generate \
+		--path tmp/v3-api.yaml \
+		--output-path libs/aiotraq \
+		--custom-template-path=templates/aiotraq \
+		--config api-client-config.yaml
+	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
 	rm -rf tmp
+	cd libs/aiotraq && poetry install
 
 ## api_update: Generate API client code.
 # HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
+# HACK2: Makefileが生成されないので手動でコピーしてる
 .PHONY: api_update
 api_update:
 	mkdir -p tmp
 	curl -o tmp/v3-api.yaml https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml
 	sed -i -e "s/default: '0000-01-01T00:00:00.000000Z'/default: '0001-01-01T00:00:00.000000Z'/g" tmp/v3-api.yaml
-	cd libs && poetry run openapi-python-client update \
-		--path ../tmp/v3-api.yaml \
-		--custom-template-path=../templates/aiotraq \
-		--config ../api-client-config.yaml
+	poetry run openapi-python-client generate \
+		--path tmp/v3-api.yaml \
+		--output-path libs/aiotraq \
+		--custom-template-path=templates/aiotraq \
+		--config api-client-config.yaml \
+		--overwrite
+	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
 	rm -rf tmp
+	cd libs/aiotraq && poetry install
 
 
 ## test: Run lint

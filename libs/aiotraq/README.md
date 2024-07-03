@@ -26,7 +26,7 @@ assert BOT_ACCESS_TOKEN is not None
 
 client = AuthenticatedClient(base_url="https://q.trap.jp/api/v3", token=BOT_ACCESS_TOKEN)
 
-with client as  client:
+with client as client:
     channels = get_channels.sync_detailed(client=client)
     print(channels.status_code)
 ```

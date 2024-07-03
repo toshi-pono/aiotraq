@@ -4,4 +4,4 @@ content_type_overrides:
   image/jpeg: application/octet-stream
   image/png: application/octet-stream
   image/gif: application/octet-stream
-package_version_override: 0.2.0
+package_version_override: 0.1.3

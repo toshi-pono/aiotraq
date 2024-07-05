@@ -1,3 +1,7 @@
+"""
+HACK: ライブラリが text/plain に対応していないため、手動で追加しています
+"""
+
 from http import HTTPStatus
 from typing import Any, Dict, Optional, Union
 

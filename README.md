@@ -43,6 +43,9 @@ poetry install
 make api_update
 ```
 
+> [!WARNING]
+> `post_webhook` についてはライブラリ未対応のため動的に生成できず、手動で追加しています
+
 ## License
 
 This project is licensed under the terms of the MIT license.

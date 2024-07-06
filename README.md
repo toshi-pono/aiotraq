@@ -46,6 +46,14 @@ make api_update
 > [!WARNING]
 > `post_webhook` についてはライブラリ未対応のため動的に生成できず、手動で追加しています
 
+## publish
+
+> [!WARNING]
+> work in progress: githubactions でいい感じにしたい
+
+1. monorepo の pyproject.toml に記載されているバージョンを更新して、`$ make write-version`でまとめて更新します
+2. github actions の workflow を実行して、pypi に publish します
+
 ## License
 
 This project is licensed under the terms of the MIT license.

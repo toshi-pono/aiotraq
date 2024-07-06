@@ -48,6 +48,7 @@ class TraqHttpBot:
             "CHANNEL_CREATED": [],
             "CHANNEL_TOPIC_CHANGED": [],
             "USER_CREATED": [],
+            "USER_ACTIVATED": [],
             "STAMP_CREATED": [],
             "TAG_ADDED": [],
             "TAG_REMOVED": [],

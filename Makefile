@@ -42,8 +42,8 @@ api_update:
 
 
 ## test: Run lint
-.PHONY: lint_all
-lint_all:
+.PHONY: lint
+lint:
 	poetry run ruff check .
 	poetry run mypy .
 	cd libs/aiotraq && poetry run ruff check .

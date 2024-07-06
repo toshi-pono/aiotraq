@@ -16,10 +16,10 @@ class UserPayload(BaseModel):
     """ユーザー情報ペイロード
 
     Attributes:
-        id (str): ユーザーUUId
+        id (str): ユーザーUUID
         name (str): ユーザーのtraQ Id
         displayName (str): ユーザーの表示名
-        iconId (str): ユーザーアイコンのファイルUUId
+        iconId (str): ユーザーアイコンのファイルUUID
         bot (bool): ユーザーがBotかどうか
     """
 
@@ -34,10 +34,10 @@ class ChannelPayload(BaseModel):
     """チャンネル情報ペイロード
 
     Attributes:
-        id (str): チャンネルUUId
+        id (str): チャンネルUUID
         name (str): チャンネル名
         path (str): チャンネルパス
-        parentId (str): 親チャンネルのUUId, ルートチャンネルの場合は"00000000-0000-0000-0000-000000000000"
+        parentId (str): 親チャンネルのUUID, ルートチャンネルの場合は"00000000-0000-0000-0000-000000000000"
         creator (UserPayload): チャンネル作成者
         createdAt (datetime.datetime): チャンネル作成日時
         updatedAt (datetime.datetime): チャンネル更新日時
@@ -70,9 +70,9 @@ class MessagePayload(BaseModel):
     """メッセージ情報ペイロード
 
     Attributes:
-        id (str): メッセージUUId
+        id (str): メッセージUUID
         user (UserPayload): メッセージ投稿者
-        channelId (str): 投稿先チャンネルUUId
+        channelId (str): 投稿先チャンネルUUID
         text (str): 生メッセージ本文
         plainText (str): メッセージ本文(埋め込み情報・改行なし)
         embedded (list[EmbeddedInfoPayload]): メッセージ埋め込み情報の配列
@@ -94,8 +94,8 @@ class MessageStampPayload(BaseModel):
     """メッセージスタンプ情報
 
     Attributes:
-        stampId (str): スタンプUUId
-        userId (str): スタンプを押したユーザーUUId
+        stampId (str): スタンプUUID
+        userId (str): スタンプを押したユーザーUUID
         count (int): このユーザーによって押されたこのスタンプの数
         createdAt (datetime.datetime): 最初にスタンプが押された日時
         updatedAt (datetime.datetime): 最後にスタンプが押された日時
@@ -112,8 +112,8 @@ class GroupMemberPayload(BaseModel):
     """グループメンバー情報ペイロード
 
     Attributes:
-        groupId (str): グループUUId
-        userId (str): ユーザーUUId
+        groupId (str): グループUUID
+        userId (str): ユーザーUUID
     """
 
     groupId: str
@@ -121,7 +121,12 @@ class GroupMemberPayload(BaseModel):
 
 
 class UserGroupAdminPayload(GroupMemberPayload):
-    """グループ管理者情報ペイロード"""
+    """グループ管理者情報ペイロード
+
+    Attributes:
+        groupId (str): グループUUID
+        userId (str): ユーザーUUID
+    """
 
     pass
 
@@ -130,8 +135,8 @@ class UserGroupMemberPayload(BaseModel):
     """グループメンバー(のより詳細な)情報ペイロード
 
     Attributes:
-        groupId (str): グループUUId
-        userId (str): ユーザーUUId
+        groupId (str): グループUUID
+        userId (str): ユーザーUUID
         role (str): メンバーの役割
     """
 
@@ -144,11 +149,11 @@ class UserGroupPayload(BaseModel):
     """グループ情報ペイロード
 
     Attributes:
-        id (str): グループUUId
+        id (str): グループUUID
         name (str): グループ名
         description (str): グループの説明
         type (str): グループの種類
-        icon (str): グループアイコンのファイルUUId
+        icon (str): グループアイコンのファイルUUID
         admins (list[UserGroupAdminPayload]): グループ管理者の配列
         members (list[UserGroupMemberPayload]): グループメンバーの配列
         createdAt (datetime.datetime): グループ作成日時

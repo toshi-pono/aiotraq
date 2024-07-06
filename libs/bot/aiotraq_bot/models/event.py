@@ -251,10 +251,28 @@ class ChannelTopicChangedPayload(BasePayload):
 
 class UserCreatedPayload(BasePayload):
     """USER_CREATEDイベントペイロード
+    ユーザーが作成された
 
     Attributes:
         eventTime (datetime.datetime): イベント発生日時
         user (UserPayload): 作成されたユーザー
+            id (str): ユーザーUUID
+            name (str): ユーザーのtraQ Id
+            displayName (str): ユーザーの表示名
+            iconId (str): ユーザーアイコンのファイルUUID
+            bot (bool): ユーザーがBotかどうか
+    """
+
+    user: UserPayload
+
+
+class UserActivatedPayload(BasePayload):
+    """USER_ACTIVATEDイベントペイロード
+    ユーザーの凍結が解除された
+
+    Attributes:
+        eventTime (datetime.datetime): イベント発生日時
+        user (UserPayload): 凍結解除されたユーザー
             id (str): ユーザーUUID
             name (str): ユーザーのtraQ Id
             displayName (str): ユーザーの表示名

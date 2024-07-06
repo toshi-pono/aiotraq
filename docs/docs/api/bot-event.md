@@ -29,6 +29,7 @@ BOT の権限一覧は [ソース](https://github.com/traPtitech/traQ/blob/maste
 | `CHANNEL_CREATED`            | `ChannelCreatedPayload`          | チャンネルが作成された                                   |
 | `CHANNEL_TOPIC_CHANGED`      | `ChannelTopicChangedPayload`     | チャンネルのトピックが変更された                         |
 | `USER_CREATED`               | `UserCreatedPayload`             | ユーザーが作成された                                     |
+| `USER_ACTIVATED`             | `UserActivatedPayload`           | ユーザーが凍結解除された                                 |
 | `STAMP_CREATED`              | `StampCreatedPayload`            | スタンプが作成された                                     |
 | `TAG_ADDED`                  | `TagAddedPayload`                | BOT にタグが追加された                                   |
 | `TAG_REMOVED`                | `TagRemovedPayload`              | BOT からタグが削除された                                 |

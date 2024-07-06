@@ -1,7 +1,8 @@
 """A client library for accessing traQ v3"""
 
-from .client import AuthenticatedClient, Client
 from importlib.metadata import version
+
+from .client import AuthenticatedClient, Client
 
 __version__ = version(__package__)
 __all__ = (

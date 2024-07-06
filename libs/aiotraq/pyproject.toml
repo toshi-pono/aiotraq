@@ -43,6 +43,8 @@ exclude = [".venv", "venv", "__pycache__", ".git"]
 
 line-length = 120
 indent-width = 4
+
+[tool.ruff.lint]
 select = ["F", "I", "UP"]
 
 [tool.ruff.format]

@@ -1,3 +1,5 @@
+current = $(shell poetry version -s)
+
 ## help: Show this help info.
 help: Makefile
 	@printf "\n\033[1mUsage: make <TARGETS> ...\033[0m\n\n\033[1mTargets:\033[0m\n\n"
@@ -50,3 +52,11 @@ lint_all:
 	cd libs/bot && poetry run mypy .
 	cd libs/message && poetry run ruff check .
 	cd libs/message && poetry run mypy .
+
+
+## version: edit versions
+.PHONY: write-version
+write-version:
+	cd libs/aiotraq && poetry version $(current)
+	cd libs/bot && poetry version $(current)
+	cd libs/message && poetry version $(current)

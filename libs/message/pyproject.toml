@@ -17,8 +17,8 @@ keywords = ["traQ", "bot", "message", "aiotraq"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-aiotraq = "^0.1.2"
-aiotraq-bot = "^0.1.2"
+aiotraq = ">=0.1.2,<0.3.0"
+aiotraq-bot = ">=0.1.2,<0.3.0"
 pillow = "^10.3.0"
 numpy = "^1.26.4"
 pandas = "^2.2.2"

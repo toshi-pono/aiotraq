@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiotraq"
-version = "0.2.4"
+version = "0.2.5"
 description = "Async ready traQ API Client"
 authors = ["toshi00"]
 license = "MIT"
@@ -18,10 +18,10 @@ keywords = ["traQ", "API", "async", "httpx"]
 python = ">=3.8,<4.0"
 httpx = ">=0.20.0,<0.28.0"
 attrs = ">=21.3.0"
-python-dateutil = "^2.8.0"
+python-dateutil = ">=2.8.0"
 
 [tool.poetry.group.dev.dependencies]
-types-python-dateutil = "^2.8.0"
+types-python-dateutil = ">=2.8.0"
 mypy = "^1.10.0"
 ruff = "^0.4.7"
 

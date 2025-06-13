@@ -11,29 +11,40 @@ NeoShowcaseのBuildpackを利用して、簡単にデプロイを行う手順を
 
 アプリケーションのルートディレクトリに依存関係を記述した `requirements.txt` ファイルを作成します。
 
-#### pipの場合
-```bash
-pip freeze > requirements.txt
-```
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-#### uvの場合
-```bash
-uv pip compile pyproject.toml > requirements.txt
-```
-
-#### poetryの場合
-Poetry 2.0 以降では [poetry-plugin-export](https://github.com/python-poetry/poetry-plugin-export) を使用して `requirements.txt` を生成できます。
-
-```bash
-poetry export -f requirements.txt --output requirements.txt
-```
+<Tabs
+  defaultValue="uv"
+  values={[
+    {label: 'uv', value: 'uv'},
+    {label: 'pip', value: 'pip'},
+    {label: 'poetry', value: 'poetry'},
+  ]}>
+  <TabItem value="pip">
+  ```bash
+  pip freeze > requirements.txt
+  ```
+  </TabItem>
+  <TabItem value="uv">
+  ```
+  uv pip compile pyproject.toml > requirements.txt
+  ```
+  </TabItem>
+  <TabItem value="poetry">
+  Poetry 2.0 以降では [poetry-plugin-export](https://github.com/python-poetry/poetry-plugin-export) を使用して `requirements.txt` を生成できます。
+  ```
+  poetry export -f requirements.txt --output requirements.txt
+  ```
+  </TabItem>
+</Tabs>
 
 ## 1. Procfile の作成
 
 アプリケーションのルートディレクトリに `Procfile` を作成します。
 このファイルには、アプリケーションの起動コマンドを記述します。
 
-```text
+```text title="Procfile"
 web: python main.py
 ```
 ここで、`main.py` はアプリケーションのエントリーポイントとなるPythonファイルです。

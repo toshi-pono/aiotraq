@@ -19,7 +19,7 @@ sidebar_label: Message
 import os
 import asyncio
 from aiotraq_bot import TraqHttpBot
-from aiotraq_message import TraqMessage
+from aiotraq_message import TraqMessage, TraqMessageManager
 
 async def component(am: TraqMessage, payload: str):
     am.write("Hello, World!")
@@ -62,7 +62,7 @@ async def component(am: TraqMessage, payload: str):
 ```
 
 コンポーネントの第一引数には、`TraqMessage`が渡されます。これを用いて、多様なメッセージ送信を行うことができます。
-メソッドの詳細は、[Components](/docs/api/components/components-overview/)を参照してください。
+メソッドの詳細は、[Components](/docs/api/components/overview/)を参照してください。
 
 ```python
 async def component(am: TraqMessage, payload: str):

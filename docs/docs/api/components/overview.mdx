@@ -1,0 +1,77 @@
+---
+id: overview
+title: Components
+sidebar_label: Components
+---
+
+このページでは、AiotraQ で使用できるコンポーネントの一覧を紹介します。
+
+import ComponentWriteImage from './img/am.write.png'
+import ComponentImageImage from './img/am.image.png'
+import ComponentDataFrameImage from './img/am.dataframe.png'
+import ComponentPyPlotImage from './img/am.pyplot.png'
+import ComponentSpinnerImage from './img/am.spinner.png'
+
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginTop: '30px'}}>
+
+  <a href="../am.write" style={{textDecoration: 'none', color: 'inherit'}}>
+    <div style={{border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '8px', overflow: 'hidden', textAlign: 'center', transition: 'box-shadow 0.2s ease', cursor: 'pointer'}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = 'none'}>
+      <img src={ComponentWriteImage} alt="am.write" style={{width: '100%', height: 'auto', display: 'block'}} />
+      <div style={{padding: '8px'}}>
+        <h3 style={{margin: 0}}>am.write</h3>
+      </div>
+    </div>
+  </a>
+
+  <a href="../am.image" style={{textDecoration: 'none', color: 'inherit'}}>
+    <div style={{border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '8px', overflow: 'hidden', textAlign: 'center', transition: 'box-shadow 0.2s ease', cursor: 'pointer'}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = 'none'}>
+      <img src={ComponentImageImage} alt="am.image" style={{width: '100%', height: 'auto', display: 'block'}} />
+      <div style={{padding: '8px'}}>
+        <h3 style={{margin: 0}}>am.image</h3>
+      </div>
+    </div>
+  </a>
+
+  <a href="../am.dataframe" style={{textDecoration: 'none', color: 'inherit'}}>
+    <div style={{border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '8px', overflow: 'hidden', textAlign: 'center', transition: 'box-shadow 0.2s ease', cursor: 'pointer'}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = 'none'}>
+      <img src={ComponentDataFrameImage} alt="am.dataframe" style={{width: '100%', height: 'auto', display: 'block'}} />
+      <div style={{padding: '8px'}}>
+        <h3 style={{margin: 0}}>am.dataframe</h3>
+      </div>
+    </div>
+  </a>
+
+  <a href="../am.pyplot" style={{textDecoration: 'none', color: 'inherit'}}>
+    <div style={{border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '8px', overflow: 'hidden', textAlign: 'center', transition: 'box-shadow 0.2s ease', cursor: 'pointer'}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = 'none'}>
+      <img src={ComponentPyPlotImage} alt="am.pyplot" style={{width: '100%', height: 'auto', display: 'block'}} />
+      <div style={{padding: '8px'}}>
+        <h3 style={{margin: 0}}>am.pyplot</h3>
+      </div>
+    </div>
+  </a>
+
+  <a href="../am.spinner" style={{textDecoration: 'none', color: 'inherit'}}>
+    <div style={{border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '8px', overflow: 'hidden', textAlign: 'center', transition: 'box-shadow 0.2s ease', cursor: 'pointer'}} onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'} onMouseOut={(e) => e.currentTarget.style.boxShadow = 'none'}>
+      <img src={ComponentSpinnerImage} alt="am.spinner" style={{width: '100%', height: 'auto', display: 'block'}} />
+      <div style={{padding: '8px'}}>
+        <h3 style={{margin: 0}}>am.spinner</h3>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+## その他のコンポーネント
+
+画像のないコンポーネントも含め、すべてのコンポーネントは以下の通りです：
+
+- [am.write](../am.write) - traQ にメッセージを書き込みます
+- [am.image](../am.image) - traQ に画像を送信します
+- [am.dataframe](../am.dataframe) - pandas の DataFrame や Series を表として送信します
+- [am.pyplot](../am.pyplot) - Matplotlib の figure を画像として送信します
+- [am.spinner](./am.spinner) - ローディングスピナーを表示します
+- [am.clear](../am.clear) - traQ のメッセージをすべて削除します
+- [am.clear_message](../am.clear_message) - 特定のメッセージを削除します
+- [am.stamp](../am.stamp) - traQ のメッセージにスタンプを押します
+- [am.clear_stamp](../am.clear_stamp) - 特定のスタンプを消します
+- [am.clear_all_stamp](../am.clear_all_stamp) - すべてのスタンプを消します

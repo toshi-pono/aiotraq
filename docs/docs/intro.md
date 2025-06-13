@@ -59,9 +59,13 @@ if __name__ == "__main__":
 
 ## Guides
 
+- [アプリケーション例](/docs/guides/app-example)
 - [Bot サーバーの作成](/docs/guides/bot-guide)
+- [動的メッセージの作成](/docs/guides/message)
+- [API Clientの利用](/docs/guides/client)
+- [NeoShowcaseへのデプロイ](/docs/guides/ns-deploy)
 
 ## API reference
 
 - [イベント一覧](/docs/api/bot-event/)
-- [メッセージコンポーネント](/docs/api/components/components-overview)
+- [メッセージコンポーネント](/docs/api/components/overview)

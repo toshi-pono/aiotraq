@@ -1,5 +1,5 @@
 ---
-id: components-image
+id: am.image
 title: am.image
 sidebar_label: am.image
 ---

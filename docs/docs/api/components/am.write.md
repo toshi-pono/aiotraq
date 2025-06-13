@@ -1,5 +1,5 @@
 ---
-id: components-write
+id: am.write
 title: am.write
 sidebar_label: am.write
 ---
@@ -15,6 +15,9 @@ traQ にメッセージを書き込みます
 ### Returns
 
 `message_id` (`str`): 追加したメッセージの UUID が返されます。これを使ってメッセージの削除ができます。
+
+- メッセージの一括削除: [`am.clear`](./am.clear.md)
+- 特定のメッセージの削除: [`am.clear_message`](./am.clear_message.md)
 
 ### Example
 

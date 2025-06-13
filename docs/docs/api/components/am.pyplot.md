@@ -1,5 +1,5 @@
 ---
-id: components-pyplot
+id: am.pyplot
 title: am.pyplot
 sidebar_label: am.pyplot
 ---

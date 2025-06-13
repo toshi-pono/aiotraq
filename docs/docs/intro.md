@@ -68,4 +68,4 @@ if __name__ == "__main__":
 ## API reference
 
 - [イベント一覧](/docs/api/bot-event/)
-- [メッセージコンポーネント](/docs/api/components/components-overview)
+- [メッセージコンポーネント](/docs/api/components/overview)

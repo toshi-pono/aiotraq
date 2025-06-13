@@ -1,5 +1,5 @@
 ---
-id: components-clear
+id: am.clear
 title: am.clear
 sidebar_label: am.clear
 ---

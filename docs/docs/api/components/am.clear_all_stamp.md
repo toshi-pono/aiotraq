@@ -1,5 +1,5 @@
 ---
-id: components-clear-all-stamp
+id: am.clear_all_stamp
 title: am.clear_all_stamp
 sidebar_label: am.clear_all_stamp
 ---

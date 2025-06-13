@@ -1,5 +1,5 @@
 ---
-id: components-dataframe
+id: am.dataframe
 title: am.dataframe
 sidebar_label: am.dataframe
 ---

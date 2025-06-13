@@ -66,7 +66,7 @@ write, spinner, clear などのメソッドを使うことができます
 - pyplot: matplotlib のグラフを送信します
 - dataframe: pandas の dataframe を表形式で表示します
 
-詳細: [ドキュメント｜ Components](https://toshi-pono.github.io/aiotraq/docs/api/components/components-overview/)
+詳細: [ドキュメント｜ Components](https://toshi-pono.github.io/aiotraq/docs/api/components/overview/)
 
 ## License
 

@@ -1,5 +1,5 @@
 ---
-id: components-write
+id: am.write
 title: am.write
 sidebar_label: am.write
 ---

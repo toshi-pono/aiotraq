@@ -1,5 +1,5 @@
 ---
-id: components-spinner
+id: am.spinner
 title: am.spinner
 sidebar_label: am.spinner
 ---

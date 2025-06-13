@@ -1,5 +1,5 @@
 ---
-id: components-stamp
+id: am.stamp
 title: am.stamp
 sidebar_label: am.stamp
 ---

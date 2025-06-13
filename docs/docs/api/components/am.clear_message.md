@@ -1,5 +1,5 @@
 ---
-id: components-clear-message
+id: am.clear_message
 title: am.clear_message
 sidebar_label: am.clear_message
 ---

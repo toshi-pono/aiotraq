@@ -71,7 +71,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: test-dist
+          name: dist
           path: ${{ inputs.working-directory }}/dist/
 
       - name: Publish to test PyPI

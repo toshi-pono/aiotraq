@@ -54,6 +54,18 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: "img/ogp.png",
+    metadata: [
+      { name: "keywords", content: "traQ, API, Client, Library, Bot, AiotraQ" },
+      { name: "og:title", content: "AiotraQ" },
+      { name: "og:description", content: "API Client & BOT Library for traQ" },
+      {
+        name: "og:image",
+        content: "https://toshi-pono.github.io/aiotraq/img/ogp.png",
+      },
+      { name: "og:url", content: "https://toshi-pono.github.io/aiotraq/" },
+      { name: "og:type", content: "website" },
+      { name: "author", content: "toshi-pono" },
+    ],
     navbar: {
       title: "AiotraQ",
       logo: {

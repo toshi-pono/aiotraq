@@ -19,7 +19,7 @@ sidebar_label: Message
 import os
 import asyncio
 from aiotraq_bot import TraqHttpBot
-from aiotraq_message import TraqMessage
+from aiotraq_message import TraqMessage, TraqMessageManager
 
 async def component(am: TraqMessage, payload: str):
     am.write("Hello, World!")

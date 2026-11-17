@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 import datetime
+
+from pydantic import BaseModel
 
 
 class BasePayload(BaseModel):
@@ -128,7 +129,6 @@ class UserGroupAdminPayload(GroupMemberPayload):
         userId (str): ユーザーUUID
     """
 
-    pass
 
 
 class UserGroupMemberPayload(BaseModel):

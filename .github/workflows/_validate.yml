@@ -23,7 +23,7 @@ jobs:
     env:
       POETRY_VIRTUALENVS_IN_PROJECT: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
       - uses: ./.github/actions/poetry_setup
@@ -61,14 +61,14 @@ jobs:
         run: |
           "${{ steps.python.outputs.tooling-python }}" scripts/ci.py build
           twine check --strict dist/*
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: distributions-${{ steps.metadata.outputs.version }}
           path: dist/
           if-no-files-found: error
       - name: Audit all locked dependencies
         run: '"${{ steps.python.outputs.tooling-python }}" scripts/audit.py'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: locked-dependency-audits-${{ steps.metadata.outputs.version }}
@@ -82,14 +82,14 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.build.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
       - uses: ./.github/actions/poetry_setup
         id: python
         with:
           python-version: ${{ matrix.python }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: ${{ needs.build.outputs.artifact }}
           path: dist/
@@ -144,7 +144,7 @@ jobs:
           uv pip list --python "$RUNNER_TEMP/runtime/bin/python" --format=json > runtime-packages.json
           "${{ steps.python.outputs.tooling-python }}" scripts/audit.py \
             --installed runtime-packages.json --python-version "${{ matrix.python }}"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: runtime-audit-${{ needs.build.outputs.version }}-py${{ matrix.python }}

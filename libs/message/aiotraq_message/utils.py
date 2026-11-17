@@ -1,8 +1,9 @@
 import base64
-from io import BytesIO
 import mimetypes
-from aiotraq.types import File
+from io import BytesIO
+
 import numpy as np
+from aiotraq.types import File
 from PIL import Image
 
 

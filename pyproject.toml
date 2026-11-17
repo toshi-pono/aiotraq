@@ -13,7 +13,7 @@ python = ">=3.11,<4.0"
 
 
 [tool.poetry.group.api.dependencies]
-openapi-python-client = "0.29.1"
+openapi-python-client = "0.30.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -22,8 +22,8 @@ aiotraq-message = { path = "libs/message", develop = true }
 python-dotenv = ">=1.2.2,<2"
 matplotlib = "^3.9.0"
 aiotraq-bot = { path = "libs/bot", develop = true }
-ruff = "==0.4.10"
-mypy = "^1.10.0"
+ruff = "==0.17.5"
+mypy = ">=1.10,<3.0"
 pillow = ">=13.0.0,<14"
 numpy = ">=1.26.4,<3"
 pandas = ">=2.2.2,<4"

@@ -1,4 +1,7 @@
-from typing import Any, Union
+from typing import Any
+
+from pydantic import ValidationError
+
 from .event import (
     BotMessageStampsUpdatedPayload,
     ChannelCreatedPayload,
@@ -15,8 +18,8 @@ from .event import (
     StampCreatedPayload,
     TagAddedPayload,
     TagRemovedPayload,
-    UserCreatedPayload,
     UserActivatedPayload,
+    UserCreatedPayload,
     UserGroupAdminAddedPayload,
     UserGroupAdminRemovedPayload,
     UserGroupCreatedPayload,
@@ -26,37 +29,35 @@ from .event import (
     UserGroupMemberUpdatedPayload,
     UserGroupUpdatedPayload,
 )
-from pydantic import ValidationError
-
 
 # FIXME: うまく型出し分ける方法わからん
-EventModel = Union[
-    BotMessageStampsUpdatedPayload,
-    ChannelCreatedPayload,
-    ChannelTopicChangedPayload,
-    DirectMessageCreatedPayload,
-    DirectMessageDeletedPayload,
-    DirectMessageUpdatedPayload,
-    JoinedPayload,
-    LeftPayload,
-    MessageCreatedPayload,
-    MessageDeletedPayload,
-    MessageUpdatedPayload,
-    PingPayload,
-    StampCreatedPayload,
-    TagAddedPayload,
-    TagRemovedPayload,
-    UserCreatedPayload,
-    UserActivatedPayload,
-    UserGroupAdminAddedPayload,
-    UserGroupAdminRemovedPayload,
-    UserGroupCreatedPayload,
-    UserGroupDeletedPayload,
-    UserGroupMemberAddedPayload,
-    UserGroupMemberRemovedPayload,
-    UserGroupMemberUpdatedPayload,
-    UserGroupUpdatedPayload,
-]
+EventModel = (
+    BotMessageStampsUpdatedPayload
+    | ChannelCreatedPayload
+    | ChannelTopicChangedPayload
+    | DirectMessageCreatedPayload
+    | DirectMessageDeletedPayload
+    | DirectMessageUpdatedPayload
+    | JoinedPayload
+    | LeftPayload
+    | MessageCreatedPayload
+    | MessageDeletedPayload
+    | MessageUpdatedPayload
+    | PingPayload
+    | StampCreatedPayload
+    | TagAddedPayload
+    | TagRemovedPayload
+    | UserCreatedPayload
+    | UserActivatedPayload
+    | UserGroupAdminAddedPayload
+    | UserGroupAdminRemovedPayload
+    | UserGroupCreatedPayload
+    | UserGroupDeletedPayload
+    | UserGroupMemberAddedPayload
+    | UserGroupMemberRemovedPayload
+    | UserGroupMemberUpdatedPayload
+    | UserGroupUpdatedPayload
+)
 EventModelType = type[EventModel]
 
 

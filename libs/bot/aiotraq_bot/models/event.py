@@ -1,13 +1,14 @@
 from pydantic import BaseModel
+
 from .common import (
     BasePayload,
     ChannelPayload,
+    GroupMemberPayload,
     MessagePayload,
     MessageStampPayload,
     UserGroupAdminPayload,
     UserGroupPayload,
     UserPayload,
-    GroupMemberPayload,
 )
 
 
@@ -18,7 +19,6 @@ class PingPayload(BasePayload):
         eventTime (datetime.datetime): イベント発生日時
     """
 
-    pass
 
 
 class JoinedPayload(BasePayload):

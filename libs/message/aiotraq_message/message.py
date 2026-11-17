@@ -1,6 +1,7 @@
 import io
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Any, Generator
+from typing import Any
 
 import numpy as np
 import pandas as pd

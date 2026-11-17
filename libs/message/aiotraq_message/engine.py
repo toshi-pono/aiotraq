@@ -7,8 +7,7 @@ from enum import Enum
 
 from aiotraq import AuthenticatedClient
 from aiotraq.api.file import post_file
-from aiotraq.api.message import (add_message_stamp, edit_message,
-                                 post_direct_message, post_message, remove_message_stamp)
+from aiotraq.api.message import add_message_stamp, edit_message, post_direct_message, post_message, remove_message_stamp
 from aiotraq.api.user import get_user_dm_channel
 from aiotraq.models.dm_channel import DMChannel
 from aiotraq.models.file_info import FileInfo
@@ -70,9 +69,8 @@ class MessageEngine:
                     user_id=user_id,
                     client=c,
                 )
-                if response.status_code == 200:
-                    if isinstance(response.parsed, DMChannel):
-                        self.channel_id = response.parsed.id
+                if response.status_code == 200 and isinstance(response.parsed, DMChannel):
+                    self.channel_id = response.parsed.id
 
             if self.channel_id is None:
                 raise ValueError("Failed to get channel_id from user_id")

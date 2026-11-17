@@ -1,10 +1,13 @@
 import asyncio
 import inspect
 import threading
-from typing import Callable, Any, Coroutine
+from collections.abc import Callable, Coroutine
+from typing import Any
+
 from aiotraq_bot import TraqHttpBot
-from .message import TraqMessage
+
 from .engine import MessageEngine
+from .message import TraqMessage
 
 
 class TraqMessageManager:
@@ -51,7 +54,6 @@ class TraqMessageManager:
         t = threading.Thread(target=self.__run, args=(component, channnel_id, user_id, payload), daemon=True)
         t.start()
         # joinを待たずに返す
-        return
 
     def __run(
         self,
@@ -87,4 +89,3 @@ class TraqMessageManager:
             await engine.end()
 
         loop.run_until_complete(asyncio.gather(engine.task(), component_task()))
-        return

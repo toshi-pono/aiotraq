@@ -1,12 +1,12 @@
 import inspect
-from typing import Awaitable, Callable
+from collections.abc import Awaitable, Callable
+
+import uvicorn
 from fastapi import FastAPI, Header, Response
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
-import uvicorn
 
 from .models import EventModel, convert_json_to_model, model_to_event_type
-
 
 EventHandlerType = Callable[..., Awaitable[None]]
 
@@ -177,7 +177,7 @@ class TraqHttpBotServer:
         except ValidationError as e:
             print(f"Validation error: {e}")
             return JSONResponse(status_code=400, content={"message": "Validation error"})
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 -- webhook boundary must return HTTP 500 for handler failures
             print(f"Error handling event: {e}")
             return JSONResponse(status_code=500, content={"message": "Error handling event"})
 

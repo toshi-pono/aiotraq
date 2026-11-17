@@ -1,7 +1,10 @@
 {
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    // Docusaurus still sets baseUrl; keep TypeScript 6 until upstream removes it.
-    "ignoreDeprecations": "6.0"
+    // TypeScript 7 removed baseUrl; override the upstream setting explicitly.
+    "baseUrl": null,
+    "paths": {
+      "@site/*": ["./*"]
+    }
   }
 }

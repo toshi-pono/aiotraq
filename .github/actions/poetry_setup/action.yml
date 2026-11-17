@@ -1,85 +1,40 @@
-name: poetry-install-with-caching
-description: Poetry install with support for caching of dependency groups.
-
+name: Python and Poetry
+description: Keep modern build tooling separate from the supported runtime Python.
 inputs:
   python-version:
-    description: Python version, supporting MAJOR.MINOR only
+    description: Runtime Python version
     required: true
-
-  poetry-version:
-    description: Poetry version
-    required: true
-
-  cache-key:
-    description: Cache key to use for manual handling of caching
-    required: true
-
-  working-directory:
-    description: Directory whose poetry.lock file should be cached
-    required: true
-
+outputs:
+  tooling-python:
+    description: Python interpreter containing Poetry, pip-audit, uv and Twine
+    value: ${{ steps.tools.outputs.python }}
+  runtime-python:
+    description: Target runtime interpreter
+    value: ${{ steps.runtime.outputs.python-path }}
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Setup python ${{ inputs.python-version }}
-      uses: actions/setup-python@v5
-      id: setup-python
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+    - name: Install isolated release tools
+      id: tools
+      shell: bash
+      run: |
+        python -m venv "$RUNNER_TEMP/aiotraq-tools"
+        "$RUNNER_TEMP/aiotraq-tools/bin/python" -m pip install --upgrade "pip==26.3"
+        "$RUNNER_TEMP/aiotraq-tools/bin/python" -m pip install \
+          "poetry==2.4.1" "pip-audit==2.10.1" "twine==6.2.0" "uv==0.13.8"
+        echo "$RUNNER_TEMP/aiotraq-tools/bin" >> "$GITHUB_PATH"
+        echo "python=$RUNNER_TEMP/aiotraq-tools/bin/python" >> "$GITHUB_OUTPUT"
+    - uses: actions/setup-python@v5
+      id: runtime
       with:
         python-version: ${{ inputs.python-version }}
-
     - uses: actions/cache@v4
-      id: cache-bin-poetry
-      name: Cache Poetry binary - Python ${{ inputs.python-version }}
-      env:
-        SEGMENT_DOWNLOAD_TIMEOUT_MIN: "1"
       with:
         path: |
-          /opt/pipx/venvs/poetry
-        # This step caches the poetry installation, so make sure it's keyed on the poetry version as well.
-        key: bin-poetry-${{ runner.os }}-${{ runner.arch }}-py-${{ inputs.python-version }}-${{ inputs.poetry-version }}
-
-    - name: Refresh shell hashtable and fixup softlinks
-      if: steps.cache-bin-poetry.outputs.cache-hit == 'true'
-      shell: bash
-      env:
-        POETRY_VERSION: ${{ inputs.poetry-version }}
-        PYTHON_VERSION: ${{ inputs.python-version }}
-      run: |
-        hash -r
-
-        # `actions/cache@v3` doesn't always seem able to correctly unpack softlinks.
-        # Delete and recreate the softlinks pipx expects to have.
-        rm /opt/pipx/venvs/poetry/bin/python
-        cd /opt/pipx/venvs/poetry/bin
-        ln -s "$(which "python$PYTHON_VERSION")" python
-        chmod +x python
-        cd /opt/pipx_bin/
-        ln -s /opt/pipx/venvs/poetry/bin/poetry poetry
-        chmod +x poetry
-
-        # Ensure everything got set up correctly.
-        /opt/pipx/venvs/poetry/bin/python --version
-        /opt/pipx_bin/poetry --version
-        pipx list
-
-    - name: Install Poetry
-      if: steps.cache-bin-poetry.outputs.cache-hit != 'true'
-      shell: bash
-      env:
-        POETRY_VERSION: ${{ inputs.poetry-version }}
-        PYTHON_VERSION: ${{ inputs.python-version }}
-      run: pipx install "poetry==$POETRY_VERSION" --python '${{ steps.setup-python.outputs.python-path }}' --verbose
-
-    - name: Restore pip and poetry cached dependencies
-      uses: actions/cache@v4
-      env:
-        SEGMENT_DOWNLOAD_TIMEOUT_MIN: "4"
-        WORKDIR: ${{ inputs.working-directory == '' && '.' || inputs.working-directory }}
-      with:
-        path: |
-          ~/.cache/pip
-          ~/.cache/pypoetry/virtualenvs
           ~/.cache/pypoetry/cache
           ~/.cache/pypoetry/artifacts
-          ${{ env.WORKDIR }}/.venv
-        key: py-deps-${{ runner.os }}-${{ runner.arch }}-py-${{ inputs.python-version }}-poetry-${{ inputs.poetry-version }}-${{ inputs.cache-key }}-${{ hashFiles(format('{0}/**/poetry.lock', env.WORKDIR)) }}
+          ~/.cache/pip
+        key: dependencies-${{ runner.os }}-${{ inputs.python-version }}-poetry2.4.1-${{ hashFiles('**/poetry.lock') }}

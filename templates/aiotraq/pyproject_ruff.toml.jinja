@@ -1,4 +1,6 @@
 [tool.ruff]
+# Keep generated source lint rules stable until a separately reviewed regeneration.
+target-version = "py38"
 exclude = [".venv", "venv", "__pycache__", ".git"]
 
 line-length = 120

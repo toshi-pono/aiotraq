@@ -1,0 +1,75 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directories: ["/", "/libs/aiotraq", "/libs/bot", "/libs/message"]
+    schedule:
+      interval: weekly
+      day: monday
+      time: "10:00"
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 10
+    groups:
+      python-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      python-compatible:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+  - package-ecosystem: pip
+    directories: ["/", "/libs/aiotraq", "/libs/bot", "/libs/message"]
+    target-branch: v0.2
+    # GitHub security updates target only the default branch. Weekly updates and
+    # CI's scheduled audit maintain this branch, including transitive dependencies.
+    allow:
+      - dependency-type: all
+    versioning-strategy: lockfile-only
+    schedule:
+      interval: weekly
+      day: monday
+      time: "10:30"
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 10
+    groups:
+      maintenance-compatible:
+        patterns: ["*"]
+        update-types: [minor, patch]
+  - package-ecosystem: npm
+    directory: /docs
+    schedule:
+      interval: weekly
+    groups:
+      docs-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      docs-compatible:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+  - package-ecosystem: npm
+    directory: /docs
+    target-branch: v0.2
+    versioning-strategy: lockfile-only
+    allow:
+      - dependency-type: all
+    schedule:
+      interval: weekly
+    groups:
+      maintenance-docs:
+        patterns: ["*"]
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: v0.2
+    schedule:
+      interval: weekly
+    groups:
+      maintenance-actions:
+        patterns: ["*"]

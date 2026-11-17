@@ -1,7 +1,8 @@
 import React from "react";
+import type { Props } from "@theme/Admonition";
 import DefaultAdmonitionTypes from "@theme-original/Admonition/Types";
 
-function BorderAdmonition(props) {
+function BorderAdmonition(props: Props) {
   return (
     <div style={{ border: "solid var(--ifm-color-primary)", padding: 4 }}>
       <div>{props.children}</div>

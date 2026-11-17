@@ -1,61 +1,54 @@
 name: CI
-
 on:
   push:
-    branches: [main]
+    branches: [main, v0.2]
   pull_request:
-
+  workflow_dispatch:
+  schedule:
+    # Recheck both maintained branches against newly published advisories.
+    - cron: "23 1 * * 1"
+permissions:
+  contents: read
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  POETRY_VERSION: "1.8.3"
-
 jobs:
-  changes:
+  validate:
+    uses: ./.github/workflows/_validate.yml
+  maintenance-audit:
+    if: github.event_name == 'schedule'
+    uses: ./.github/workflows/_validate.yml
+    with:
+      ref: v0.2
+  docs-audit:
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:
-      packages: ${{ steps.filter.outputs.changes }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ref: [main, v0.2]
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
         with:
-          filters: |
-            libs/aiotraq:
-              - "libs/aiotraq/**"
-            libs/bot:
-              - "libs/bot/**"
-            libs/message:
-              - "libs/message/**"
-  lint:
-    name: cd ${{ matrix.working-directory }} && make lint
-    needs: [changes]
-    if: ${{ needs.changes.outputs.packages != '[]' }}
-    strategy:
-      matrix:
-        working-directory: ${{ fromJson(needs.changes.outputs.packages) }}
-    uses: ./.github/workflows/_lint.yml
-    with:
-      working-directory: ${{ matrix.working-directory }}
-    secrets: inherit
+          ref: ${{ matrix.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Audit documentation dependency tree
+        working-directory: docs
+        run: npm audit --package-lock-only
   ci_success:
-    name: "CI Success"
-    needs: [changes, lint]
-    if: |
-      always()
-    env:
-      JOBS_JSON: ${{ toJson(needs) }}
-      RESULTS_JSON: ${{ toJson(needs.*.outputs) }}
-      EXIT_CODE: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && '0' || '1'}}
+    name: CI Success
+    needs: [validate, maintenance-audit, docs-audit]
+    if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: "echo result"
+      - name: Require validation to pass
+        env:
+          PRIMARY: ${{ needs.validate.result }}
+          MAINTENANCE: ${{ needs.maintenance-audit.result }}
+          DOCS: ${{ needs.docs-audit.result }}
         run: |
-          echo $RESULTS_JSON
-          echo $JOBS_JSON
-          echo "Exit code: $EXIT_CODE"
-          exit $EXIT_CODE
+          test "$PRIMARY" = success
+          test "$MAINTENANCE" = success || test "$MAINTENANCE" = skipped
+          test "$DOCS" = success || test "$DOCS" = skipped

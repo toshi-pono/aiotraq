@@ -1,62 +1,38 @@
-current = $(shell poetry version -s)
+PYTHON ?= python3
 
 ## help: Show this help info.
 help: Makefile
 	@printf "\n\033[1mUsage: make <TARGETS> ...\033[0m\n\n\033[1mTargets:\033[0m\n\n"
 	@sed -n 's/^##//p' $< | awk -F':' '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' | sort | sed -e 's/^/ /'
 
-## api_generate: Generate API client code.
-# HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
-# HACK2: Makefileが生成されないので手動でコピーしてる
-.PHONY: api_generate
-api_generate:
-	mkdir -p tmp
-	curl -o tmp/v3-api.yaml https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml
-	sed -i -e "s/default: '0000-01-01T00:00:00.000000Z'/default: '0001-01-01T00:00:00.000000Z'/g" tmp/v3-api.yaml
-	poetry run openapi-python-client generate \
-		--path tmp/v3-api.yaml \
-		--output-path libs/aiotraq \
-		--custom-template-path=templates/aiotraq \
-		--config api-client-config.yaml
-	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
-	rm -rf tmp
-	cd libs/aiotraq && poetry install
-
-## api_update: Generate API client code.
-# HACK: pythonのdatetimeは0年を表現できないので replace "default: '0000-01-01T00:00:00.000000Z'" -> "default: '0001-01-01T00:00:00.000000Z'"
-# HACK2: Makefileが生成されないので手動でコピーしてる
-.PHONY: api_update
-api_update:
-	mkdir -p tmp
-	curl -o tmp/v3-api.yaml https://raw.githubusercontent.com/traPtitech/traQ/master/docs/v3-api.yaml
-	sed -i -e "s/default: '0000-01-01T00:00:00.000000Z'/default: '0001-01-01T00:00:00.000000Z'/g" tmp/v3-api.yaml
-	poetry run openapi-python-client generate \
-		--path tmp/v3-api.yaml \
-		--output-path libs/aiotraq \
-		--custom-template-path=templates/aiotraq \
-		--config api-client-config.yaml \
-		--overwrite
-	cp templates/aiotraq/Makefile.jinja libs/aiotraq/Makefile
-	rm -rf tmp
-	cd libs/aiotraq && poetry install
+## api_generate: Disabled on v0.2; generate on main and backport reviewed code.
+## api_update: Disabled on v0.2; generate on main and backport reviewed code.
+.PHONY: api_generate api_update
+api_generate api_update:
+	@echo "API generation is disabled on v0.2. Generate on main, then backport reviewed Python 3.8-compatible code."
+	@exit 1
 
 
-## test: Run lint
+## lint: Lint and type-check packages using the root development environment.
 .PHONY: lint
 lint:
-	poetry run ruff check .
-	poetry run mypy .
-	cd libs/aiotraq && poetry run ruff check .
-	cd libs/aiotraq && poetry run mypy .
-	cd libs/bot && poetry run ruff check .
-	cd libs/bot && poetry run mypy .
-	cd libs/message && poetry run ruff check .
-	cd libs/message && poetry run mypy .
+	@runtime_python=$$(poetry run python -c 'import sys; print(sys.executable)'); \
+	for project in libs/aiotraq libs/bot libs/message; do \
+		(cd $$project && "$$runtime_python" -m ruff check . && "$$runtime_python" -m mypy .) || exit $$?; \
+	done
 
 
-## version: edit versions
+## write-version: Sync versions from root metadata (or VERSION=0.3.0).
 .PHONY: write-version
 write-version:
-	cd libs/aiotraq && poetry version $(current)
-	cd libs/bot && poetry version $(current)
-	cd libs/message && poetry version $(current)
+	$(PYTHON) scripts/version.py $(VERSION)
+
+## check-version: Check package and generator version consistency.
+.PHONY: check-version
+check-version:
+	$(PYTHON) scripts/version.py --check
+
+## test: Run runtime regression tests with installed packages.
+.PHONY: test
+test:
+	poetry run python -m unittest discover -s tests -v

@@ -10,6 +10,17 @@ async ready API wrapper and bot library for [traQ](https://github.com/traPtitech
 
 ![teaser](docs/static/img/aiotraq.png)
 
+## Maintenance release line
+
+This is the `v0.2` maintenance branch. Version **0.2.6** preserves Python >=3.8
+for `aiotraq` and Python >=3.10 for `aiotraq-bot` / `aiotraq-message`.
+`main` contains the Python >=3.11 release line.
+
+**Older Python environments retain known dependency vulnerabilities.** Read
+[SECURITY.md](SECURITY.md) before using 0.2.6, and prefer Python >=3.11 for
+new deployments. Backports keep the existing Python minimums; features and
+Python support changes belong on `main`.
+
 ## Installation
 
 ```bash
@@ -34,25 +45,25 @@ pip install aiotraq-message
 
 ## Development
 
-### aiotraq
+### API client maintenance
 
-API Client の更新: monorepo のプロジェクトルートで以下を実行してください
+API generation is disabled on `v0.2`. Generate updates on `main` with its patched
+generator, review the changes, and backport only Python 3.8-compatible code.
+`make api_update` and `make api_generate` fail intentionally on this branch.
+The hand-maintained `post_webhook` implementation must be preserved when
+backporting API changes.
 
-```bash
-poetry install
-make api_update
-```
+## Release preparation
 
-> [!WARNING]
-> `post_webhook` についてはライブラリ未対応のため動的に生成できず、手動で追加しています
+Use Poetry 2.4.1. Run `python scripts/version.py <version>` from the repository
+root, refresh all affected locks, then validate the built wheel / sdist and
+runtime tests before release. `make write-version` synchronizes the version
+from the root `pyproject.toml`, including the API generator and docs metadata.
 
-## publish
-
-> [!WARNING]
-> work in progress: githubactions でいい感じにしたい
-
-1. monorepo の pyproject.toml に記載されているバージョンを更新して、`$ make write-version`でまとめて更新します
-2. github actions の workflow を実行して、pypi に publish します
+The release workflow is dispatched for the reviewed branch and commit only.
+Do not publish while tests or dependency audits have unexplained failures.
+For `v0.2`, review the scoped security exceptions in [SECURITY.md](SECURITY.md).
+The maintainer must approve the final release before publishing either series.
 
 ## License
 

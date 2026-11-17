@@ -1,6 +1,6 @@
 {
   "name": "aiotraq-docs",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -12,22 +12,23 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test:dependencies": "node --test scripts/test-security-overrides.cjs"
   },
   "dependencies": {
-    "@docusaurus/core": "3.8.1",
-    "@docusaurus/preset-classic": "3.8.1",
-    "@mdx-js/react": "^3.1.0",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@mdx-js/react": "^3.1.1",
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.8.1",
-    "@docusaurus/tsconfig": "3.8.1",
-    "@docusaurus/types": "3.8.1",
-    "typescript": "~5.9.2"
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/tsconfig": "3.10.2",
+    "@docusaurus/types": "3.10.2",
+    "typescript": "^6.0.3"
   },
   "browserslist": {
     "production": [
@@ -42,6 +43,20 @@
     ]
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=22.0"
+  },
+  "overrides": {
+    "@docusaurus/core": {
+      "tinypool": "^2.1.2"
+    },
+    "copy-webpack-plugin": {
+      "serialize-javascript": "^7.1.3"
+    },
+    "css-minimizer-webpack-plugin": {
+      "serialize-javascript": "^7.1.3"
+    },
+    "sockjs": {
+      "uuid": "^11.1.1"
+    }
   }
 }

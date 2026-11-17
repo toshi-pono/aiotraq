@@ -16,13 +16,41 @@ AiotraQ は 3 つのライブラリから構成されていて、それぞれ以
 
 ## インストール
 
-Python 3.10 以上が必要です
+この `v0.2` 保守ブランチの配布バージョンは **0.2.6** です。
+`aiotraq` は Python 3.8 以上、`aiotraq-bot` / `aiotraq-message` は Python 3.10 以上に対応します。
+古い Python では残存脆弱性があるため、リポジトリの `SECURITY.md` を確認してください。
+
+最新の 0.3 系は `main` で開発され、Python 3.11 以上が必要です。
 
 ```bash
 pip install aiotraq
 pip install aiotraq-bot
 pip install aiotraq-message
 ```
+
+## 0.2 系からの更新
+
+0.3 系へ更新する場合は Python 3.11 以上で仮想環境を作り直し、3 パッケージと依存ライブラリを更新してください。
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade "aiotraq>=0.3,<0.4" "aiotraq-bot>=0.3,<0.4" "aiotraq-message>=0.3,<0.4"
+python -m pip check
+```
+
+依存関係を lock ファイルやコンテナに固定している場合は、それらも更新して再デプロイします。
+`main` は 0.3 系以降、[`v0.2` ブランチ](https://github.com/toshi-pono/aiotraq/tree/v0.2) は 0.2 系の保守に使用します。
+
+Python 3.10 を維持する Bot・メッセージ利用環境では、0.2 系を明示してインストールしてください。
+API クライアント単体の 0.2 系は Python 3.8 以上に対応します。
+
+```bash
+python -m pip install --upgrade "aiotraq>=0.2.6,<0.3" "aiotraq-bot>=0.2.6,<0.3" "aiotraq-message>=0.2.6,<0.3"
+```
+
+0.2 系では古い Python に対応する依存ライブラリの修正版が提供されない場合があります。
+残る制約は [セキュリティ方針](https://github.com/toshi-pono/aiotraq/blob/v0.2/SECURITY.md) を確認し、可能な環境では 0.3 系へ移行してください。
 
 ## アプリケーション例
 

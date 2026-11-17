@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiotraq-monorepo"
-version = "0.2.5"
+version = "0.2.6"
 description = "Async ready traQ Developper toolkit"
 authors = ["toshi00"]
 license = "MIT"
@@ -12,20 +12,30 @@ package-mode = false
 python = "^3.10"
 
 
+# API generation is deliberately disabled on the Python 3.8-compatible branch.
+# Generate on main, then backport reviewed compatible code (see SECURITY.md).
 [tool.poetry.group.api.dependencies]
-openapi-python-client = "0.21.1"
 
 
 [tool.poetry.group.dev.dependencies]
 aiotraq = { path = "libs/aiotraq", develop = true }
 aiotraq-message = { path = "libs/message", develop = true }
-python-dotenv = "^1.0.1"
+python-dotenv = ">=1.2.2,<2"
 matplotlib = "^3.9.0"
+fonttools = ">=4.60.2,<5"
+pygments = ">=2.20.0,<3"
 aiotraq-bot = { path = "libs/bot", develop = true }
 ruff = ">=0.2,<0.4"
 mypy = "^1.10.0"
-pillow = "^10.3.0"
-numpy = "^1.26.4"
+types-python-dateutil = "^2.8.0"
+pillow = [
+    { version = ">=12.3.0,<13", python = "<3.11" },
+    { version = ">=13.0.0,<14", python = ">=3.11" },
+]
+numpy = [
+    { version = ">=1.26.4,<2", python = "<3.13" },
+    { version = ">=2.2,<3", python = ">=3.13" },
+]
 pandas = "^2.2.2"
 
 [tool.mypy]

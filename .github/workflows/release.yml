@@ -1,110 +1,67 @@
-name: release
-run-name: Release ${{ inputs.working-directory }} by @${{ github.actor }}
-
+name: Prepare or publish release
+run-name: Release ${{ inputs.version }} (${{ inputs.destination }})
 on:
-  workflow_call:
-    inputs:
-      working-directory:
-        required: true
-        type: string
-        description: "From which folder this pipeline executes"
   workflow_dispatch:
     inputs:
-      working-directory:
+      version:
+        description: Exact version already committed on the release branch
+        type: string
         required: true
+      destination:
+        description: Prepare artifacts by default; publishing requires a separate explicit selection
         type: choice
-        description: "From which folder this pipeline executes"
-        options:
-          - "libs/aiotraq"
-          - "libs/bot"
-          - "libs/message"
-
-env:
-  PYTHON_VERSION: "3.12"
-  POETRY_VERSION: "1.8.3"
-
+        default: prepare
+        options: [prepare, testpypi, pypi]
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main'
+  preflight:
     runs-on: ubuntu-latest
-
-    outputs:
-      pkg-name: ${{ steps.check-version.outputs.pkg-name }}
-      version: ${{ steps.check-version.outputs.version }}
-
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ env.PYTHON_VERSION}} + Poetry ${{ env.POETRY_VERSION }}
-        uses: "./.github/actions/poetry_setup"
+      - uses: ./.github/actions/poetry_setup
+        id: python
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          poetry-version: ${{ env.POETRY_VERSION }}
-          working-directory: ${{ inputs.working-directory }}
-          cache-key: release
-      - name: build
-        run: poetry build
-        working-directory: ${{ inputs.working-directory }}
-      - name: Upload build
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: ${{ inputs.working-directory }}/dist/
-      - name: check-version
-        id: check-version
-        shell: bash
-        working-directory: ${{ inputs.working-directory }}
+          python-version: "3.11"
+      - name: Validate branch and requested version
+        env:
+          RELEASE_BRANCH: ${{ github.ref_name }}
+          REQUESTED_VERSION: ${{ inputs.version }}
+          REF_TYPE: ${{ github.ref_type }}
         run: |
-          echo pkg-name="$(poetry version | cut -d' ' -f1)" >> $GITHUB_OUTPUT
-          echo version="$(poetry version --short)" >> $GITHUB_OUTPUT
-  test-pypi-publish:
-    needs: [build]
-    runs-on: ubuntu-latest
-    permissions:
-      # This permission is used for trusted publishing:
-      # https://blog.pypi.org/posts/2023-04-20-introducing-trusted-publishers/
-      #
-      # Trusted publishing has to also be configured on PyPI for each package:
-      # https://docs.pypi.org/trusted-publishers/adding-a-publisher/
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: ${{ inputs.working-directory }}/dist/
-
-      - name: Publish to test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: ${{ inputs.working-directory }}/dist/
-          verbose: true
-          print-hash: true
-          repository-url: https://test.pypi.org/legacy/
-
-          # We overwrite any existing distributions with the same name and version.
-          # This is *only for CI use* and is *extremely dangerous* otherwise!
-          # https://github.com/pypa/gh-action-pypi-publish#tolerating-release-package-file-duplicates
-          skip-existing: true
+          test "$REF_TYPE" = branch
+          "${{ steps.python.outputs.tooling-python }}" scripts/ci.py metadata --release-branch "$RELEASE_BRANCH"
+          test "$(poetry version --short)" = "$REQUESTED_VERSION"
+  validate:
+    needs: preflight
+    uses: ./.github/workflows/_validate.yml
   publish:
-    needs: [build, test-pypi-publish]
+    needs: validate
+    if: inputs.destination != 'prepare'
     runs-on: ubuntu-latest
+    # Configure required reviewers on these environments before enabling publishing.
+    environment:
+      name: ${{ inputs.destination }}
     permissions:
       id-token: write
-    defaults:
-      run:
-        working-directory: ${{ inputs.working-directory }}
     steps:
-      - uses: actions/checkout@v4
-
       - uses: actions/download-artifact@v4
         with:
-          name: dist
-          path: ${{ inputs.working-directory }}/dist/
-
-      - name: Publish package distributions to PyPI
+          name: ${{ needs.validate.outputs.artifact }}
+          path: dist/
+      - name: Publish to TestPyPI
+        if: inputs.destination == 'testpypi'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: ${{ inputs.working-directory }}/dist/
-          verbose: true
+          packages-dir: dist/
+          repository-url: https://test.pypi.org/legacy/
+          print-hash: true
+      - name: Publish to PyPI
+        if: inputs.destination == 'pypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
           print-hash: true

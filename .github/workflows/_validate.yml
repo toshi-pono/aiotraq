@@ -1,0 +1,152 @@
+name: Validate distributions
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Optional maintenance branch for scheduled validation
+        type: string
+        default: ""
+    outputs:
+      version:
+        value: ${{ jobs.build.outputs.version }}
+      artifact:
+        value: ${{ jobs.build.outputs.artifact }}
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.metadata.outputs.version }}
+      matrix: ${{ steps.metadata.outputs.matrix }}
+      artifact: distributions-${{ steps.metadata.outputs.version }}
+    env:
+      POETRY_VIRTUALENVS_IN_PROJECT: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: ./.github/actions/poetry_setup
+        id: python
+        with:
+          python-version: "3.11"
+      - name: Validate versions and supported Python
+        id: metadata
+        run: '"${{ steps.python.outputs.tooling-python }}" scripts/ci.py metadata'
+      - name: Test audit policy enforcement
+        run: '"${{ steps.python.outputs.tooling-python }}" -m unittest discover -s scripts -p ci_tests.py -v'
+      - name: Check every manifest and lock
+        run: |
+          for project in . libs/aiotraq libs/bot libs/message; do
+            poetry -C "$project" check --lock
+          done
+      - name: Install development dependencies and local packages
+        run: |
+          poetry env use "${{ steps.python.outputs.runtime-python }}"
+          poetry install --with dev,api
+      - name: Lint and type-check packages
+        run: |
+          for project in libs/aiotraq libs/bot libs/message; do
+            (cd "$project" && "$GITHUB_WORKSPACE/.venv/bin/python" -m ruff check .)
+            (cd "$project" && "$GITHUB_WORKSPACE/.venv/bin/python" -m mypy .)
+          done
+      - name: Check safe API generation
+        env:
+          RELEASE_VERSION: ${{ steps.metadata.outputs.version }}
+        run: |
+          if [[ "$RELEASE_VERSION" == 0.3.* ]]; then
+            .venv/bin/python scripts/check_generator.py
+          fi
+      - name: Build wheel and sdist for every package
+        run: |
+          "${{ steps.python.outputs.tooling-python }}" scripts/ci.py build
+          twine check --strict dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions-${{ steps.metadata.outputs.version }}
+          path: dist/
+          if-no-files-found: error
+      - name: Audit all locked dependencies
+        run: '"${{ steps.python.outputs.tooling-python }}" scripts/audit.py'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: locked-dependency-audits-${{ steps.metadata.outputs.version }}
+          path: audit-reports/
+          if-no-files-found: ignore
+  runtime:
+    needs: build
+    # setup-python still supplies the maintained Python 3.8/3.9 on Ubuntu 24.04.
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.build.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: ./.github/actions/poetry_setup
+        id: python
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact }}
+          path: dist/
+      - name: Install wheels into a clean environment
+        env:
+          API_ONLY: ${{ matrix.api-only }}
+        run: |
+          # Keep installer/bootstrap packages out of the tested distribution environment.
+          # uv runs on the host; pip --python still executes pip on the target and
+          # modern pip cannot run on the maintained Python 3.8/3.9 interpreters.
+          python -m venv --without-pip "$RUNNER_TEMP/runtime"
+          if [ "$API_ONLY" = true ]; then
+            uv pip install --python "$RUNNER_TEMP/runtime/bin/python" dist/aiotraq-*.whl
+          else
+            uv pip install --python "$RUNNER_TEMP/runtime/bin/python" dist/*.whl
+          fi
+          uv pip check --python "$RUNNER_TEMP/runtime/bin/python"
+      - name: Test installed wheels
+        env:
+          API_ONLY: ${{ matrix.api-only }}
+        run: |
+          if [ "$API_ONLY" = true ]; then
+            "$RUNNER_TEMP/runtime/bin/python" -m unittest discover -s tests/api -v
+          else
+            "$RUNNER_TEMP/runtime/bin/python" -m unittest discover -s tests -v
+          fi
+      - name: Rebuild and install source distributions
+        env:
+          API_ONLY: ${{ matrix.api-only }}
+        run: |
+          # Reuse the wheel-resolved dependencies; each sdist must build with
+          # its declared isolated backend on the target Python interpreter.
+          if [ "$API_ONLY" = true ]; then
+            uv pip install --python "$RUNNER_TEMP/runtime/bin/python" \
+              --no-deps --reinstall dist/aiotraq-*.tar.gz
+          else
+            uv pip install --python "$RUNNER_TEMP/runtime/bin/python" \
+              --no-deps --reinstall dist/*.tar.gz
+          fi
+          uv pip check --python "$RUNNER_TEMP/runtime/bin/python"
+      - name: Test installed source distributions
+        env:
+          API_ONLY: ${{ matrix.api-only }}
+        run: |
+          if [ "$API_ONLY" = true ]; then
+            "$RUNNER_TEMP/runtime/bin/python" -m unittest discover -s tests/api -v
+          else
+            "$RUNNER_TEMP/runtime/bin/python" -m unittest discover -s tests -v
+          fi
+      - name: Audit dependencies selected for the runtime
+        run: |
+          uv pip list --python "$RUNNER_TEMP/runtime/bin/python" --format=json > runtime-packages.json
+          "${{ steps.python.outputs.tooling-python }}" scripts/audit.py \
+            --installed runtime-packages.json --python-version "${{ matrix.python }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: runtime-audit-${{ needs.build.outputs.version }}-py${{ matrix.python }}
+          path: audit-reports/
+          if-no-files-found: ignore

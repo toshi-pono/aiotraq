@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 — prepared, not yet released
+## 0.3.0 — 2026-11-17
 
 - Require Python 3.11+ for API, Bot and Message packages.
 - Enforce repaired dependency minimums in distribution metadata, including
@@ -19,7 +19,7 @@ Migration: use Python 3.11+, upgrade the packages and re-resolve application
 dependencies. Applications requiring Python 3.8–3.10 should use the compatible
 0.2 line and read its residual-risk report. See [SECURITY.md](SECURITY.md).
 
-## 0.2.6 — prepared separately on `v0.2`
+## 0.2.6 — 2026-11-17 (`v0.2`)
 
 - Preserve API Python 3.8+ and Bot / Message Python 3.10+.
 - Backport compatible dependency security fixes. Select newer repaired

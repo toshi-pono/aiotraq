@@ -5,7 +5,7 @@
 | 0.3.x | `main` | 3.11+ for every package | Current line; remediate known dependency vulnerabilities |
 | 0.2.x | `v0.2` | `aiotraq`: 3.8+; Bot / Message: 3.10+ | Backport compatible security fixes without raising Python minimums |
 
-The prepared 0.2.6 release is a partial security update, not a guarantee that
+The 0.2.6 release is a partial security update, not a guarantee that
 legacy Python environments are free of known vulnerabilities. AnyIO fixes
 require Python 3.10+, and Pillow 13 fixes require Python 3.11+. See the
 [maintenance branch security report](https://github.com/toshi-pono/aiotraq/blob/v0.2/SECURITY.md)

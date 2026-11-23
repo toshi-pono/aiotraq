@@ -22,7 +22,7 @@ aiotraq-message = { path = "libs/message", develop = true }
 python-dotenv = ">=1.2.2,<2"
 matplotlib = "^3.9.0"
 aiotraq-bot = { path = "libs/bot", develop = true }
-ruff = "==0.17.5"
+ruff = "==0.17.6"
 mypy = ">=1.10,<3.0"
 pillow = ">=13.0.0,<14"
 numpy = ">=1.26.4,<3"
